@@ -33,6 +33,10 @@ namespace LaiCai.Auth.Implement
             {
                 return new ResultItem(false, "clientID/clientSecret错误");
             }
+            if(request.clientSecret.Length!=32)
+            {
+                return new ResultItem(false, "clientSecret长度错误");
+            }
             var clientInfo = await _client.GetById(request.clientId);
             if (clientInfo == null)
                 return new ResultItem(false, "client不存在");

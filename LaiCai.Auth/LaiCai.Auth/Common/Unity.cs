@@ -25,7 +25,7 @@ namespace LaiCai.Auth.Common
             byte[] s = md5.ComputeHash(Encoding.UTF8.GetBytes(inputStr));
             for (int i = 0; i < s.Length; i++)
             {
-                pwd = pwd + s[i].ToString("X");
+                pwd = pwd + s[i].ToString("X2");
             }
             return pwd.ToLower();
         }

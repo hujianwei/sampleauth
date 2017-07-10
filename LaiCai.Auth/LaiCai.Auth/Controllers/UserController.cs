@@ -35,6 +35,9 @@ namespace LaiCai.Auth.Controllers
                 return new CustomActionResult(4001, "非法访问", null, HttpStatusCode.BadRequest, Request);
             }
             string tokenId = authInfo.Parameter;
+            var checkResult = await this.ParamsValidLength(32, tokenId);
+            if (!checkResult.IsSuccess)
+                return new CustomActionResult(4001, checkResult.Message, null, Request);
             var tokenInfo = await _token.GetToken(tokenId);
             if(tokenInfo==null)
             {
@@ -65,16 +68,12 @@ namespace LaiCai.Auth.Controllers
         /// <returns></returns>
         public async Task<CustomActionResult> Post(IDictionary<string,string> dict)
         {
-            if (dict == null || dict.Count != 4)
-                return new CustomActionResult(4001, "参数错误", null, Request);
-            if(!dict.ContainsKey("client_id"))
-                return new CustomActionResult(4001, "参数错误", null, Request);
-            else if(!dict.ContainsKey("client_secret"))
-                return new CustomActionResult(4001, "参数错误", null, Request);
-            else if(!dict.ContainsKey("user_name"))
-                return new CustomActionResult(4001, "参数错误", null, Request);
-            else if(!dict.ContainsKey("password"))
-                return new CustomActionResult(4001, "参数错误", null, Request);
+            var checkResult = await this.ParamsContainKeys(dict,4, "client_id", "client_secret", "user_name", "password");
+            if (!checkResult.IsSuccess)
+                return new CustomActionResult(4001, checkResult.Message, null, Request);
+            checkResult = await this.ParamsValidLength(32, dict["client_secret"]);
+            if (!checkResult.IsSuccess)
+                return new CustomActionResult(4001, checkResult.Message, null, Request);
             RequstAuthContext context = new RequstAuthContext();
             context.clientId = dict["client_id"];
             context.clientSecret = dict["client_secret"];

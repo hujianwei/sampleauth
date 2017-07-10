@@ -29,11 +29,31 @@ namespace LaiCai.Auth.Implement
             if (p != null)
             {
                 Log.Info("已存在接入应用");
+                item.Result = new ResultItem(false, "已存在接入应用");
                 throw new Exception("已存在接入应用");
+            }
+            if(item.TokenInterval<=0)
+            {
+                Log.Error(string.Format("{0}的令牌过期时间没有设置", item.ClientId));
+                item.Result = new ResultItem(false, "牌过期时间没有设置");
+                return Task.FromResult(false);
+            }
+            if(string.IsNullOrEmpty(item.Secret)||item.Secret.Length!=32)
+            {
+                Log.Error(string.Format("{0}的Secret错误", item.Secret));
+                item.Result = new ResultItem(false, "Secret错误");
+                return Task.FromResult(false);
+            }
+            if(item.RefreshTokenInterval>0&&!item.EnableRefreshToken)
+            {
+                Log.Error("刷新令牌设置不正确");
+                item.Result = new ResultItem(false, "刷新令牌设置不正确");
+                return Task.FromResult(false);
             }
             _clientList.Add(item);//改成写入数据库
             string key = CacheKeyFormat.ClientFormat.GetClientKey(item.ClientId);
             Cache.Set(key, item);
+            item.Result = new ResultItem(true, "");
             return Task.FromResult(true);
         }
 

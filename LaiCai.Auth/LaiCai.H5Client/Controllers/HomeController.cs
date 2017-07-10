@@ -22,7 +22,7 @@ namespace LaiCai.H5Client.Controllers
         /// <summary>
         /// 接入的secret
         /// </summary>
-        private string clientSecret = "4fc8710733229acab11cc1d4efb3f0";
+        private string clientSecret = "7d571b83ca26939c2bd0233df30bfd67";
 
         /// <summary>
         /// 用户登陆地址

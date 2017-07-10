@@ -40,9 +40,10 @@ namespace LaiCai.Auth.Controllers
         /// <returns></returns>
         public async Task<CustomActionResult> Get(string id)
         {            
-            int tt = id.Trim().Length;
-            if (string.IsNullOrEmpty(id) || id.Trim().Length <10)
-                return new CustomActionResult(4001, "参数错误", null, Request);
+
+            var checkResult = await this.ParamsValidLength(32,id);
+            if(!checkResult.IsSuccess)
+                return new CustomActionResult(4001, checkResult.Message, null, Request);
             var result = await _token.GetToken(id);
             if (result != null && result.Result != null && result.Result.IsSuccess)
                 return new CustomActionResult(result, Request);
@@ -56,16 +57,12 @@ namespace LaiCai.Auth.Controllers
         /// <returns></returns>
         public async Task<CustomActionResult> Post(IDictionary<string,string> dict)
         {
-            if(dict==null||dict.Count!=4)
-                return new CustomActionResult(4001, "参数错误", null, Request);
-            else if(!dict.ContainsKey("client_id"))
-                return new CustomActionResult(4001, "参数错误", null, Request);
-            else if(!dict.ContainsKey("client_secret"))
-                return new CustomActionResult(4001, "参数错误", null, Request);
-            else if(!dict.ContainsKey("token_id"))
-                return new CustomActionResult(4001, "参数错误", null, Request);
-            else if(!dict.ContainsKey("method"))
-                return new CustomActionResult(4001, "参数错误", null, Request);
+            var checkResult = await this.ParamsContainKeys(dict,4, "client_id", "client_secret", "token_id", "method");
+            if (!checkResult.IsSuccess)
+                return new CustomActionResult(4000, checkResult.Message, null, Request);
+            checkResult = await this.ParamsValidLength(32, dict["client_secret"], dict["token_id"]);
+            if (!checkResult.IsSuccess)
+                return new CustomActionResult(4000, checkResult.Message, null, Request);
             string method = dict["method"];
             string clientId = dict["client_id"];
             string clientSecret = dict["client_secret"];

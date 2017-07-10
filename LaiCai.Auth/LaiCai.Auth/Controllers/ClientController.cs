@@ -21,6 +21,11 @@ namespace LaiCai.Auth.Controllers
             _token = token;
         }
 
+        public CustomActionResult Get()
+        {
+            return new CustomActionResult(true, Request);
+        }
+
         /// <summary>
         /// 直连形式获取token
         /// </summary>
@@ -28,12 +33,10 @@ namespace LaiCai.Auth.Controllers
         /// <returns></returns>
         public async Task<CustomActionResult> Post(IDictionary<string,string> dict)
         {
-            if (dict == null || dict.Count != 2)
-                return new CustomActionResult(4001, "参数错误", null, Request);
-            if(!dict.ContainsKey("client_id"))
-                return new CustomActionResult(4001, "参数错误", null, Request);
-            if(!dict.ContainsKey("client_secret"))
-                return new CustomActionResult(4001, "参数错误", null, Request);
+
+            var checkResult =await this.ParamsContainKeys(dict,2, "client_id", "client_secret");
+            if(!checkResult.IsSuccess)
+                return new CustomActionResult(4001, checkResult.Message, null, Request);
             string clientID = dict["client_id"];
             string clientSecret = dict["client_secret"];
             var clientInfo = await _client.GetById(clientID);
