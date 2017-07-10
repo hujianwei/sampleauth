@@ -1,0 +1,7 @@
+D:\code\src\02.WebApi\LaiCai.Auth\LaiCai.Auth.Api2.0\bin\LaiCai.Auth.Api.net20.dll.config
+D:\code\src\02.WebApi\LaiCai.Auth\LaiCai.Auth.Api2.0\bin\LaiCai.Auth.Api.net20.dll
+D:\code\src\02.WebApi\LaiCai.Auth\LaiCai.Auth.Api2.0\bin\LaiCai.Auth.Api.net20.pdb
+D:\code\src\02.WebApi\LaiCai.Auth\LaiCai.Auth.Api2.0\bin\Newtonsoft.Json.dll
+D:\code\src\02.WebApi\LaiCai.Auth\LaiCai.Auth.Api2.0\bin\Newtonsoft.Json.xml
+D:\code\src\02.WebApi\LaiCai.Auth\LaiCai.Auth.Api2.0\obj\Debug\LaiCai.Auth.Api.net20.dll
+D:\code\src\02.WebApi\LaiCai.Auth\LaiCai.Auth.Api2.0\obj\Debug\LaiCai.Auth.Api.net20.pdb

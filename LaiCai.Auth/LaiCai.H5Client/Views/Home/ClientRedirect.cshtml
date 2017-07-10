@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "应用直连服务器";
+}
+
+<form action="@Url.Action("ClientRedirect")" method="post">
+    <table>
+
+        <tr><td></td><td>应用直连服务器</td></tr>
+        <tr><td>应用ID:</td><td><input type="text" name="clientId" /></td></tr>
+        <tr><td>应用Secret:</td><td><input type="text" name="clientSecret" /></td></tr>
+        <tr><td></td><td><input type="submit" value="连接" /></td></tr>
+
+    </table>
+    结果:@ViewBag.Result
+</form>
+

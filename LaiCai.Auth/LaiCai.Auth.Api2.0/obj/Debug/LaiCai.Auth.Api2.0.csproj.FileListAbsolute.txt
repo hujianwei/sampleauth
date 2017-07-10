@@ -1,0 +1,6 @@
+D:\code\src\02.WebApi\LaiCai.Auth\LaiCai.Auth.Api2.0\bin\LaiCai.Auth.Api2.0.dll.config
+D:\code\src\02.WebApi\LaiCai.Auth\LaiCai.Auth.Api2.0\bin\LaiCai.Auth.Api2.0.dll
+D:\code\src\02.WebApi\LaiCai.Auth\LaiCai.Auth.Api2.0\bin\LaiCai.Auth.Api2.0.pdb
+D:\code\src\02.WebApi\LaiCai.Auth\LaiCai.Auth.Api2.0\obj\Debug\LaiCai.Auth.Api2.0.dll
+D:\code\src\02.WebApi\LaiCai.Auth\LaiCai.Auth.Api2.0\obj\Debug\LaiCai.Auth.Api2.0.pdb
+D:\code\src\02.WebApi\LaiCai.Auth\LaiCai.Auth.Api2.0\obj\Debug\LaiCai.Auth.Api2.0.csprojResolveAssemblyReference.cache

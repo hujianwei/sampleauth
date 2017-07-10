@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaiCai.Auth", "LaiCai.Auth\LaiCai.Auth.csproj", "{94A12CC8-CFE0-46F1-AF19-DFB497318FCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaiCai.TestApi", "LaiCai.TestApi\LaiCai.TestApi.csproj", "{AD826A33-0A08-4C91-9C15-BF9661F5EC4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaiCai.H5Client", "LaiCai.H5Client\LaiCai.H5Client.csproj", "{5ABE1D37-3BDC-469F-92B2-CC0C167DB4CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaiCai.Auth.Api.net20", "LaiCai.Auth.Api2.0\LaiCai.Auth.Api.net20.csproj", "{DEE2F514-AE2E-4668-BBD8-B7B2135BFB7A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94A12CC8-CFE0-46F1-AF19-DFB497318FCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94A12CC8-CFE0-46F1-AF19-DFB497318FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94A12CC8-CFE0-46F1-AF19-DFB497318FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94A12CC8-CFE0-46F1-AF19-DFB497318FCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD826A33-0A08-4C91-9C15-BF9661F5EC4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD826A33-0A08-4C91-9C15-BF9661F5EC4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD826A33-0A08-4C91-9C15-BF9661F5EC4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD826A33-0A08-4C91-9C15-BF9661F5EC4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5ABE1D37-3BDC-469F-92B2-CC0C167DB4CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ABE1D37-3BDC-469F-92B2-CC0C167DB4CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ABE1D37-3BDC-469F-92B2-CC0C167DB4CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ABE1D37-3BDC-469F-92B2-CC0C167DB4CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEE2F514-AE2E-4668-BBD8-B7B2135BFB7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEE2F514-AE2E-4668-BBD8-B7B2135BFB7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEE2F514-AE2E-4668-BBD8-B7B2135BFB7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEE2F514-AE2E-4668-BBD8-B7B2135BFB7A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
