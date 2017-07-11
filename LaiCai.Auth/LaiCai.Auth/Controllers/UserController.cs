@@ -28,7 +28,7 @@ namespace LaiCai.Auth.Controllers
         /// <returns></returns>
         public async Task<CustomActionResult> Get(string id)
         {
-
+           
             var authInfo = Request.Headers.Authorization;
             if(authInfo==null)
             {
