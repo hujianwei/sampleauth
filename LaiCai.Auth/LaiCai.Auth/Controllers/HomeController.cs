@@ -13,8 +13,10 @@ namespace LaiCai.Auth.Controllers
     public class HomeController : Controller
     {
         private IRequestHelper _helper = null;
-        public HomeController(IRequestHelper helper)
+        private ICache _cache = null;
+        public HomeController(IRequestHelper helper,ICache cache)
         {
+            _cache = cache;
             _helper = helper;
         }
 
@@ -53,8 +55,29 @@ namespace LaiCai.Auth.Controllers
 
         public async Task<ActionResult> Shop()
         {
+            Dictionary<string, DateTime> dict = new Dictionary<string, DateTime>();
+            dict.Add("regtime", DateTime.Now);
+            dict.Add("borthday", new DateTime(1984, 5, 5));
+            _cache.SetAll<DateTime>(dict);
+            Response.Write(_cache.Get<DateTime>("borthday"));
+            Response.End();
+
             var result = await _helper.HttpToServer("http://shop.api.com/api/shop", "", RequestMethod.GET, ContentType.JSON, "6d4c4635db41f77abbd11693c11cb", null, "utf-8");
             Response.Write(result.Item2);
+            Response.End();
+            return View();
+        }
+
+        public ActionResult CacheTest()
+        {
+            Dictionary<string, DateTime> dict = new Dictionary<string, DateTime>();
+            dict.Add("regtime", DateTime.Now);
+            dict.Add("borthday", new DateTime(1984, 5, 5));
+            _cache.SetAll<DateTime>(dict);
+
+            var tt = System.Runtime.Caching.MemoryCache.Default;
+
+            Response.Write(_cache.Get<DateTime>("borthday"));
             Response.End();
             return View();
         }
