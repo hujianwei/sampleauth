@@ -1,0 +1,1 @@
+{"checks": {"name": "ping", "script": "ping  www.baidu.com", "interval": "30s"}}
