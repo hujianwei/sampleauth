@@ -1,0 +1,14 @@
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\CApp.exe.config
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\CApp.exe
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\CApp.pdb
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\CacheManager.Core.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\CacheManager.StackExchange.Redis.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\CacheManager.SystemRuntimeCaching.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\StackExchange.Redis.StrongName.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\CacheManager.Core.xml
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\CacheManager.StackExchange.Redis.xml
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\CacheManager.SystemRuntimeCaching.xml
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\StackExchange.Redis.StrongName.xml
+D:\gitcode\auth\LaiCai.Auth\CApp\obj\Debug\CApp.exe
+D:\gitcode\auth\LaiCai.Auth\CApp\obj\Debug\CApp.pdb
+D:\gitcode\auth\LaiCai.Auth\CApp\obj\Debug\CApp.csprojResolveAssemblyReference.cache
