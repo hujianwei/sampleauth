@@ -70,14 +70,14 @@ namespace LaiCai.Auth.Controllers
 
         public ActionResult CacheTest()
         {
-            Dictionary<string, DateTime> dict = new Dictionary<string, DateTime>();
-            dict.Add("regtime", DateTime.Now);
-            dict.Add("borthday", new DateTime(1984, 5, 5));
-            _cache.SetAll<DateTime>(dict);
+            //Dictionary<string, DateTime> dict = new Dictionary<string, DateTime>();
+            //dict.Add("regtime", DateTime.Now);
+            //dict.Add("borthday", new DateTime(1984, 5, 5));
+            //_cache.SetAll<DateTime>(dict);
 
-            var tt = System.Runtime.Caching.MemoryCache.Default;
+            //var tt = System.Runtime.Caching.MemoryCache.Default;
 
-            Response.Write(_cache.Get<DateTime>("borthday"));
+            Response.Write(_cache.Get<object>("borthday"));
             Response.End();
             return View();
         }

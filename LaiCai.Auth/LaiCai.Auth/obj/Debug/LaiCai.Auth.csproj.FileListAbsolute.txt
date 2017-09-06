@@ -273,3 +273,4 @@ D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\bin\zh-Hans\System.Web.WebPages.Deployme
 D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\bin\zh-Hans\System.Web.WebPages.Razor.resources.dll
 D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\obj\Debug\LaiCai.Auth.dll
 D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\obj\Debug\LaiCai.Auth.pdb
+D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\obj\Debug\LaiCai.Auth.csprojResolveAssemblyReference.cache
