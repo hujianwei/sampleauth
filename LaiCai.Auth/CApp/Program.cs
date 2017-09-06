@@ -5,31 +5,64 @@ using CacheManager.Core;
 using CacheManager.SystemRuntimeCaching;
 using CacheManager.Redis;
 
+using ServiceStack.Common;
+using ServiceStack.Redis;
+
 namespace CApp
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main1(string[] args)
         {
             //Cache.Instance().Set("borthday", "fdfs1909983434", 300);
 
-            Console.WriteLine(Cache.Instance().Get("145695"));
+            //Console.WriteLine(Cache.Instance().Get("145695"));
 
-            Cache.Instance().Set("d", "test");
+            //Cache.Instance().Set("d", "test");
 
-            Cache.Instance().Set("e", "test");
+            //Cache.Instance().Set("e", "test");
 
-            Cache.Instance().Set("f", "test");
-            Cache.Instance().Set("g", "test");
-            Cache.Instance().Set("h", "test");
-            for (int i = 0; i < 500; i++)
+            //Cache.Instance().Set("f", "test");
+            //Cache.Instance().Set("g", "test");
+            //Cache.Instance().Set("h", "test");
+            for (int i = 0; i < 300000; i++)
             {
                 string name = new Random().Next(1000, 99999999).ToString();
-                Cache.Instance().Set(name, "test");
-                System.Threading.Thread.Sleep(10);
+                Cache.Instance().Set(name, name);
+                Console.WriteLine(Cache.Instance().Get(name));
+                System.Threading.Thread.Sleep(3);
             }
 
+            //for(int i=0;i<100000;i++)
+            //{
+            //    using (var client = Client())
+            //    {
+            //        string name = new Random().Next(1000, 99999999).ToString();
+            //        client.Set(name, name);
+            //    }
+            //}
+
+
+
+            //Cache.Instance().Clear();
             Console.ReadLine();
+        }
+
+        public static RedisClient Client()
+        {
+            RedisClient _client = null;
+            try
+            {
+               
+                _client = new RedisClient("192.168.1.55", 7000);
+                _client.Db = 0;
+
+            }
+            catch (Exception ex)
+            {
+               
+            }
+            return _client;
         }
     }
 
@@ -83,20 +116,25 @@ namespace CApp
         public static Cache Instance()
         {
             var items = manager.CacheHandles;
+
+           
             foreach(var item in items)
             {
-                if(item.GetType()==typeof(CacheManager.SystemRuntimeCaching.MemoryCacheHandle<object>))
+                if(item.GetType()==typeof(CacheManager.Redis.RedisCacheHandle<object>))
                 {
-                   
+                    var temp = (CacheManager.Redis.RedisCacheHandle<object>)item;
+                    var serverList = temp.Servers;
+ 
                 }
             }
+          
             return _cache;
         }
 
         public object Get(string key)
         {
-            
 
+            
             return manager.Get(key);
         }
 
@@ -109,6 +147,11 @@ namespace CApp
         public void Set(string key,object value)
         {
             manager.Put(key, value);
+        }
+
+        public void Clear()
+        {
+            manager.Clear();
         }
 
         

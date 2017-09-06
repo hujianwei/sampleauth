@@ -11,4 +11,12 @@ D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\CacheManager.SystemRuntimeCaching.xml
 D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\StackExchange.Redis.StrongName.xml
 D:\gitcode\auth\LaiCai.Auth\CApp\obj\Debug\CApp.exe
 D:\gitcode\auth\LaiCai.Auth\CApp\obj\Debug\CApp.pdb
-D:\gitcode\auth\LaiCai.Auth\CApp\obj\Debug\CApp.csprojResolveAssemblyReference.cache
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\ServiceStack.Client.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\ServiceStack.Common.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\ServiceStack.Interfaces.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\ServiceStack.Redis.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\ServiceStack.Text.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\Microsoft.Diagnostics.Tracing.EventSource.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\RabbitMQ.Client.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\Microsoft.Diagnostics.Tracing.EventSource.xml
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\RabbitMQ.Client.xml
