@@ -14,19 +14,20 @@ namespace CApp
     {
         static void Main(string[] args)
         {
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    System.Threading.Thread thread = new System.Threading.Thread(new ParameterizedThreadStart(Send));
-            //    thread.Start(i);
-            //}
+            for (int i = 0; i < 50; i++)
+            {
+                System.Threading.Thread thread = new System.Threading.Thread(new ParameterizedThreadStart(Send));
+                thread.Start(i);
+            }
 
-            Receive();
+            //Receive();
         }
 
         static void Send(object obj)
         {
             while (true)
             {
+                System.Threading.Thread.Sleep(5);
                 var factory = new ConnectionFactory();
                 factory.HostName = "192.168.1.55";
                 factory.UserName = "hujianwei";
@@ -38,9 +39,11 @@ namespace CApp
                     {
 
                         channel.ExchangeDeclare("logs", "fanout");
-                       
 
-                        //channel.QueueDeclare("hello", false, false, false, null);
+                        string queueName = channel.QueueDeclare().QueueName;
+                        channel.QueueDeclare("tt", true, false, false, null);
+                       
+                        channel.QueueBind(queueName, "logs", "");
                         string message = string.Format("线程ID:{1},Hello World,{0}", DateTime.Now, obj); ;
                         var body = Encoding.UTF8.GetBytes(message);
                         channel.BasicPublish("logs", "", null, body);
@@ -66,17 +69,19 @@ namespace CApp
                     string queueName = channel.QueueDeclare().QueueName;
                     channel.QueueBind(queueName, "logs", "");
                     var consumer = new QueueingBasicConsumer(channel);
-                    channel.BasicConsume(queueName, true, consumer);
+                    //var consumer = new DefaultBasicConsumer(channel);
+                  
+                    channel.BasicConsume(queueName, false, consumer);
                     Console.WriteLine(" waiting for message.");
                     while (true)
                     {
-
+                       
                         var ea = (BasicDeliverEventArgs)consumer.Queue.Dequeue();
-
+                     
                         var body = ea.Body;
                         var message = Encoding.UTF8.GetString(body);
                         Console.WriteLine("Received {0}", message);
-
+                        channel.BasicAck(ea.DeliveryTag, false);
                     }
                 }
             }
