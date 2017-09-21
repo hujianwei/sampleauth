@@ -1,0 +1,5 @@
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\bin\Debug\netcoreapp1.0\AspNetCore.WebApp.deps.json
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\bin\Debug\netcoreapp1.0\AspNetCore.WebApp.runtimeconfig.json
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\bin\Debug\netcoreapp1.0\AspNetCore.WebApp.runtimeconfig.dev.json
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\obj\Debug\netcoreapp1.0\AspNetCore.WebApp.csprojResolveAssemblyReference.cache
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\obj\Debug\netcoreapp1.0\AspNetCore.WebApp.AssemblyInfo.cs

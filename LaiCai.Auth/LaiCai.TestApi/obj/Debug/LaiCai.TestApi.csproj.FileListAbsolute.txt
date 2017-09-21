@@ -160,6 +160,6 @@ D:\gitcode\auth\LaiCai.Auth\LaiCai.TestApi\bin\zh-Hans\System.Web.Razor.resource
 D:\gitcode\auth\LaiCai.Auth\LaiCai.TestApi\bin\zh-Hans\System.Web.WebPages.resources.dll
 D:\gitcode\auth\LaiCai.Auth\LaiCai.TestApi\bin\zh-Hans\System.Web.WebPages.Deployment.resources.dll
 D:\gitcode\auth\LaiCai.Auth\LaiCai.TestApi\bin\zh-Hans\System.Web.WebPages.Razor.resources.dll
-D:\gitcode\auth\LaiCai.Auth\LaiCai.TestApi\obj\Debug\LaiCai.TestApi.csprojResolveAssemblyReference.cache
 D:\gitcode\auth\LaiCai.Auth\LaiCai.TestApi\obj\Debug\LaiCai.TestApi.dll
 D:\gitcode\auth\LaiCai.Auth\LaiCai.TestApi\obj\Debug\LaiCai.TestApi.pdb
+D:\gitcode\auth\LaiCai.Auth\LaiCai.TestApi\obj\Debug\LaiCai.TestApi.csprojResolveAssemblyReference.cache

@@ -1,0 +1,11 @@
+
+时间:2017/9/19 15:17:30,错误消息:Connection to '192.168.1.21:7011,192.168.1.21:7012,192.168.1.21:7013,192.168.1.21:7014,192.168.1.21:7015,192.168.1.21:7016,192.168.1.22:7021,192.168.1.22:7022,192.168.1.22:7023,192.168.1.22:7024,192.168.1.22:7025,192.168.1.22:7026,allowAdmin=True,connectTimeout=500,password=****,ssl=False,abortConnect=False,connectRetry=10,proxy=None' failed.,source:CacheManager.Core,StackTrace:   在 CacheManager.Core.BaseCacheManager`1..ctor(String name, ICacheManagerConfiguration configuration)
+   在 CacheManager.Core.BaseCacheManager`1..ctor(ICacheManagerConfiguration configuration)
+   在 CacheManager.Core.CacheFactory.Build[TCacheValue](String cacheName, Action`1 settings)
+   在 CApp.Cache..ctor() 位置 D:\gitcode\auth\LaiCai.Auth\CApp\Program.cs:行号 125
+   在 CApp.Program.SetTask(Object sp) 位置 D:\gitcode\auth\LaiCai.Auth\CApp\Program.cs:行号 74,TargetSite:Void .ctor(System.String, CacheManager.Core.ICacheManagerConfiguration)
+时间:2017/9/19 15:18:33,错误消息:Connection to '192.168.1.21:7011,allowAdmin=True,connectTimeout=500,password=****,ssl=False,abortConnect=False,connectRetry=10,proxy=None' failed.,source:CacheManager.Core,StackTrace:   在 CacheManager.Core.BaseCacheManager`1..ctor(String name, ICacheManagerConfiguration configuration)
+   在 CacheManager.Core.BaseCacheManager`1..ctor(ICacheManagerConfiguration configuration)
+   在 CacheManager.Core.CacheFactory.Build[TCacheValue](String cacheName, Action`1 settings)
+   在 CApp.Cache..ctor() 位置 D:\gitcode\auth\LaiCai.Auth\CApp\Program.cs:行号 125
+   在 CApp.Program.SetTask(Object sp) 位置 D:\gitcode\auth\LaiCai.Auth\CApp\Program.cs:行号 74,TargetSite:Void .ctor(System.String, CacheManager.Core.ICacheManagerConfiguration)

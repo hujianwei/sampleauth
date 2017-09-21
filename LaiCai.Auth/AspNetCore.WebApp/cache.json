@@ -1,0 +1,60 @@
+﻿{
+  "$schema": "http://cachemanager.michaco.net/schemas/cachemanager.json#",
+  "redis": [
+    {
+      "key": "redisConnection",
+      "endpoints": [
+        {
+          "host": "192.168.1.55",
+          "port": 7001
+        },
+        {
+          "host": "192.168.1.55",
+          "port": 7005
+        }
+      ],
+      "allowAdmin": true,
+      "database": 0,
+      "password": "laicai88.com",
+      "connectionString": "192.168.1.55:7000,allowAdmin=True,connectTimeout=5000,password=laicai88.com,ssl=False,abortConnect=False,connectRetry=10,proxy=None"
+    }
+  ],
+  "cacheManagers": [
+    {
+      "maxRetries": 1000,
+      "name": "cachename",
+      "retryTimeout": 100,
+      "updateMode": "Up",
+      "backplane": {
+        "key": "redisConnection",
+        "knownType": "Redis",
+        "channelName": "test"
+      },
+      "loggerFactory": {
+        "knownType": "Microsoft"
+      },
+      "serializer": {
+        "knownType": "Json"
+      },
+      "handles": [
+        //{
+        //  "knownType": "Dictionary",
+        //  "enablePerformanceCounters": true,
+        //  "enableStatistics": true,
+        //  "expirationMode": "Absolute",
+        //  "expirationTimeout": "0:0:23",
+        //  "isBackplaneSource": false,
+        //  "name": "sys cache"
+        //},
+        {
+          "knownType": "Redis",
+          "key": "redisConnection",
+          "isBackplaneSource": true,
+          "expirationMode": "Sliding",
+          "expirationTimeout": "00:10:00",
+          "name": "redis_cache"
+        }
+      ]
+    }
+  ]
+}

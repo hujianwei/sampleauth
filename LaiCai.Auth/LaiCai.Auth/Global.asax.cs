@@ -28,7 +28,8 @@ namespace LaiCai.Auth
             SetupResolveRules(builder);
             builder.RegisterControllers(Assembly.GetExecutingAssembly());
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
-
+            
+         
 
             builder.RegisterWebApiFilterProvider(GlobalConfiguration.Configuration);
 

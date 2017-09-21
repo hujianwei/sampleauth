@@ -12,9 +12,9 @@ namespace CApp
 {
     class MqProgram
     {
-        static void Main(string[] args)
+        static void Main1(string[] args)
         {
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 70; i++)
             {
                 System.Threading.Thread thread = new System.Threading.Thread(new ParameterizedThreadStart(Send));
                 thread.Start(i);

@@ -47,7 +47,7 @@ namespace LaiCai.Auth.Controllers
             //var result = await _helper.HttpToServer("http://auth.api.com/api/user/1007", "", RequestMethod.GET, ContentType.JSON, "6e3374846bcf65a6cdcb1f49f82cd51", headerDict, "utf-8");
 
             Response.Write(result.Item2);
-            Response.End();
+  
 
             return View();
         }

@@ -11,16 +11,27 @@ using LaiCai.Auth.Common;
 
 namespace LaiCai.Auth.Controllers
 {
+    /// <summary>
+    /// Client相关操作
+    /// </summary>
     public class ClientController : BaseApiController
     {
         private IClient _client = null;
         private IToken _token = null;
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="token"></param>
         public ClientController(IClient client,IToken token)
         {
             _client = client;
             _token = token;
         }
-
+        /// <summary>
+        /// Get简单例子
+        /// </summary>
+        /// <returns></returns>
         public CustomActionResult Get()
         {
             return new CustomActionResult(true, Request);
@@ -29,7 +40,7 @@ namespace LaiCai.Auth.Controllers
         /// <summary>
         /// 直连形式获取token
         /// </summary>
-        /// <param name="dict"></param>
+        /// <param name="dict">字典</param>
         /// <returns></returns>
         public async Task<CustomActionResult> Post(IDictionary<string,string> dict)
         {

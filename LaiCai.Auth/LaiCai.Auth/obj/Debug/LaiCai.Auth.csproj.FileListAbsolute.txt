@@ -273,4 +273,9 @@ D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\bin\zh-Hans\System.Web.WebPages.Deployme
 D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\bin\zh-Hans\System.Web.WebPages.Razor.resources.dll
 D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\obj\Debug\LaiCai.Auth.dll
 D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\obj\Debug\LaiCai.Auth.pdb
-D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\obj\Debug\LaiCai.Auth.csprojResolveAssemblyReference.cache
+D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\bin\System.Web.Cors.dll
+D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\bin\System.Web.Http.Cors.dll
+D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\bin\WebActivatorEx.dll
+D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\bin\System.Web.Http.Cors.xml
+D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\bin\Swashbuckle.Core.dll
+D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\bin\LaiCai.Auth.xml

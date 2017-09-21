@@ -4,6 +4,8 @@ using System.Text;
 using CacheManager.Core;
 using CacheManager.SystemRuntimeCaching;
 using CacheManager.Redis;
+using System.Threading;
+using System.IO;
 
 using ServiceStack.Common;
 using ServiceStack.Redis;
@@ -12,57 +14,96 @@ namespace CApp
 {
     class Program
     {
-        static void Main1(string[] args)
+        private static string logDir = AppDomain.CurrentDomain.BaseDirectory + "log";
+        static void Main(string[] args)
         {
-            //Cache.Instance().Set("borthday", "fdfs1909983434", 300);
 
-            //Console.WriteLine(Cache.Instance().Get("145695"));
+            if (!Directory.Exists(logDir))
+                Directory.CreateDirectory(logDir);
 
-            //Cache.Instance().Set("d", "test");
+           //Cache.Instance().Clear();
 
-            //Cache.Instance().Set("e", "test");
 
-            //Cache.Instance().Set("f", "test");
-            //Cache.Instance().Set("g", "test");
-            //Cache.Instance().Set("h", "test");
-            for (int i = 0; i < 300000; i++)
+            IList<Thread> threadList = new List<Thread>();
+            var prevTime = DateTime.Now;
+            for (int i = 0; i < 1000; i++)
             {
-                string name = new Random().Next(1000, 99999999).ToString();
-                Cache.Instance().Set(name, name);
-                Console.WriteLine(Cache.Instance().Get(name));
-                System.Threading.Thread.Sleep(3);
+                Thread td = new Thread(new System.Threading.ParameterizedThreadStart(SetTask));
+                td.Start(i);
+                threadList.Add(td);
             }
-
-            //for(int i=0;i<100000;i++)
-            //{
-            //    using (var client = Client())
-            //    {
-            //        string name = new Random().Next(1000, 99999999).ToString();
-            //        client.Set(name, name);
-            //    }
-            //}
+            foreach (var thread in threadList)
+            {
+                thread.Join();
+            }
+            threadList = new List<Thread>();
 
 
 
-            //Cache.Instance().Clear();
+            for (int i = 0; i < 1000; i++)
+            {
+                Thread td = new Thread(new System.Threading.ParameterizedThreadStart(GetTask));
+                td.Start(i);
+                threadList.Add(td);
+            }
+            foreach(var thread in threadList)
+            {
+                thread.Join();
+            }
+            Console.WriteLine(DateTime.Now.Subtract(prevTime).TotalSeconds);
+            Console.ReadLine();
+
+
+
+           
             Console.ReadLine();
         }
 
-        public static RedisClient Client()
+        public static void SetTask(object sp)
         {
-            RedisClient _client = null;
-            try
+          
+            var prevDate = DateTime.Now;
+            for (int i = 0; i < 10; i++)
             {
-               
-                _client = new RedisClient("192.168.1.55", 7000);
-                _client.Db = 0;
+                try
+                {
+                    var rdVal = new Random(1000000 + i).Next(9999999);
+                    IDictionary<string, object> dict = new Dictionary<string, object>();
+                    dict.Add("name", sp.ToString() + "_" + i.ToString());
+                    dict.Add("value", rdVal.ToString() + DateTime.Now.Ticks.ToString());
+                    Cache.Instance().Set(sp.ToString() + "_" + i.ToString(), dict, 3600);
+                }
+                catch(Exception e)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendFormat("\r\n时间:{0},错误消息:{1},source:{2},StackTrace:{3},TargetSite:{4}", DateTime.Now, e.Message, e.Source, e.StackTrace, e.TargetSite);
+                    System.IO.File.AppendAllText(string.Format(@"{0}\seterror_{1}.txt", logDir,sp.ToString()), sb.ToString());
+                }
+            }
+            Console.WriteLine("settask" + "_" + sp.ToString()+ "----"+DateTime.Now.Subtract(prevDate).TotalSeconds);
+          
+        }
 
-            }
-            catch (Exception ex)
+        public static void GetTask(object sp)
+        {
+            var prevDate = DateTime.Now;
+            for (int i = 0; i < 10; i++)
             {
-               
+                try
+                {
+                    //Console.WriteLine(Cache.manager.Exists(sp.ToString() + "_" + i.ToString()));
+
+                    var obj = Cache.Instance().Get(sp.ToString() + "_" + i.ToString());
+                    //Console.WriteLine(obj);
+                }
+                catch(Exception e)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendFormat("\r\n\r\n\r\n时间:{0},{5}错误消息:{1},source:{2},StackTrace:{3},TargetSite:{4}", DateTime.Now, e.Message, e.Source, e.StackTrace, e.TargetSite,i);
+                    System.IO.File.AppendAllText(string.Format(@"{0}\geterror_{1}.txt", logDir, sp.ToString()), sb.ToString());
+                }
             }
-            return _client;
+            Console.WriteLine("gettask" + "_" + sp.ToString()+ "-----"+DateTime.Now.Subtract(prevDate).TotalSeconds);
         }
     }
 
@@ -73,68 +114,65 @@ namespace CApp
         //private string _password = "laicai88.com";
         private string _host = "192.168.1.55";
         private int _port = 7000;
-        private string _password = "";
-        private static ICacheManager<object> manager = null;
+        private string _password = "laicai88.com";
+        
+        public static ICacheManager<object> manager = null;
 
         private Cache()
         {
+
             manager = CacheFactory.Build("getConsole", settings =>
             {
-                settings.WithSystemRuntimeCacheHandle("handleName").WithExpiration(ExpirationMode.Sliding, TimeSpan.FromMinutes(60))
+
+                settings.WithSystemRuntimeCacheHandle("handleName").WithExpiration(ExpirationMode.Sliding, TimeSpan.FromMinutes(20))
                 .And
                 .WithRedisConfiguration("redis", config =>
                 {
                     config.WithAllowAdmin()
-                        .WithDatabase(0)                      
+                        .WithDatabase(0)
                         .WithEndpoint(_host, _port)
-
-                        //.WithEndpoint("192.168.1.55",7001)
-                        //.WithEndpoint("192.168.1.55",7002)
+                        .WithEndpoint("192.168.1.55", 7001)
+                        .WithEndpoint("192.168.1.55", 7002)
                         .WithEndpoint("192.168.1.55", 7003)
-                        //.WithEndpoint("192.168.1.55",7004)
-                        //.WithEndpoint("192.168.1.55",7005)
-                        .WithEndpoint("192.168.1.55", 7006)
-                        //.WithEndpoint("192.168.1.55", 7007)
-                        //.WithEndpoint("192.168.1.55", 7008)
-                        //.WithEndpoint("192.168.1.55", 7009)
-                        //.WithEndpoint("192.168.1.55", 7010)
-                        //.WithEndpoint("192.168.1.55", 7011)
-                        .WithPassword(_password);
+                        .WithEndpoint("192.168.1.55", 7004)
+                        .WithEndpoint("192.168.1.55", 7005)
+                        .WithEndpoint("192.168.1.55", 7010)
+                        .WithEndpoint("192.168.1.55", 7011)
+                        .WithPassword(_password)
+                        .WithConnectionTimeout(500);
                 })
-
                 .WithMaxRetries(100)
                 .WithRetryTimeout(50)
                 .WithRedisBackplane("redis")
                 .WithRedisCacheHandle("redis", true);
-                
+
             });
-           
+
         }
 
-        private static Cache _cache = new Cache();
+        private static Cache _cache = null;
 
         public static Cache Instance()
         {
-            var items = manager.CacheHandles;
+            //var items = manager.CacheHandles;
 
-           
-            foreach(var item in items)
-            {
-                if(item.GetType()==typeof(CacheManager.Redis.RedisCacheHandle<object>))
-                {
-                    var temp = (CacheManager.Redis.RedisCacheHandle<object>)item;
-                    var serverList = temp.Servers;
- 
-                }
-            }
-          
+
+            //foreach(var item in items)
+            //{
+            //    if(item.GetType()==typeof(CacheManager.Redis.RedisCacheHandle<object>))
+            //    {
+            //        var temp = (CacheManager.Redis.RedisCacheHandle<object>)item;
+            //        var serverList = temp.Servers;
+
+            //    }
+            //}
+            if (_cache == null)
+                _cache = new Cache();
             return _cache;
         }
 
         public object Get(string key)
         {
-
-            
             return manager.Get(key);
         }
 
