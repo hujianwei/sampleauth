@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,119 +14,33 @@ namespace CApp
     /// </summary>
     class ConsulRegister
     {
+        private static string rootUri = "http://192.168.1.55:8500/v1/";
+        private static string rootDir = @"D:\gitcode\auth\LaiCai.Auth\CApp\";
         static  void Main(string[] args)
         {
-            var client = new ConsulClient();
-            Client_DefaultConfig_env();
-
-            //var info = await client.Agent.Self();
-            //var checks = await client.Health.Node((string)info.Response["Config"]["NodeName"]);
-
-
+            RegisterService();
+            //DeregisterService("redis1");
         }
-        [Fact]
-        public static async void Client_DefaultConfig_env()
+
+        /// <summary>
+        /// 注册服务
+        /// </summary>
+        static void RegisterService()
         {
-            const string addr = "192.168.1.55:8500";
-            const string token = "abcd1234";
-            const string auth = "username:password";
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", addr);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_TOKEN", token);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_AUTH", auth);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL", "1");
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL_VERIFY", "0");
-
-            var client = new ConsulClient();
-            var config = client.Config;
-            await KV_Put_Get_Delete();
-            var info =  await client.Agent.Self();
-            var t = info.Response["Config"]["NodeName"];
-
-
-            var opts = new QueryOptions()
-            {
-                Datacenter = "dc1",
-                Consistency = ConsistencyMode.Consistent,
-                WaitIndex = 1000,
-                WaitTime = new TimeSpan(0, 0, 100),
-                Token = "12345"
-            };
-            var tt = client.KV;
-            //var request = client.Get<KVPair>("/v1/kv/foo", opts);
-
-
-
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_ADDR", string.Empty);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_TOKEN", string.Empty);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_AUTH", string.Empty);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL", string.Empty);
-            Environment.SetEnvironmentVariable("CONSUL_HTTP_SSL_VERIFY", string.Empty);
-
-
-
+            string regUrl = string.Format("{0}/agent/service/register", rootUri);
+            string str = File.ReadAllText(string.Format(@"{0}consulconfig\regservice.txt",rootDir));
+            var result = HttpRequestHelper.HttpToServer(regUrl, str, HttpRequestHelper.HttpMethod.PUT, HttpRequestHelper.ContentType.JSON, "", null, "utf-8");
         }
 
-        [Fact]
-        internal static string GenerateTestKeyName()
+        /// <summary>
+        /// 删除服务
+        /// </summary>
+        /// <param name="serviceId"></param>
+        static void DeregisterService(string serviceId)
         {
-            var keyChars = new char[16];
-
-            for (var i = 0; i < keyChars.Length; i++)
-            {
-                keyChars[i] = Convert.ToChar(new Random().Next(65, 91));
-            }
-            return new string(keyChars);
+            string url = string.Format("{0}/agent/service/deregister/{1}", rootUri, serviceId);
+            var result = HttpRequestHelper.HttpToServer(url, "", HttpRequestHelper.HttpMethod.PUT, HttpRequestHelper.ContentType.JSON, "", null, "utf-8");
         }
 
-        public static async Task KV_Put_Get_Delete()
-        {
-            var client = new ConsulClient();
-            var kv = client.KV;
-
-            var key = GenerateTestKeyName();
-
-            var value = Encoding.UTF8.GetBytes("test");
-
-            var getRequest = await kv.Get(key);
-
-
-            var pair = new KVPair(key)
-            {
-                Flags = 42,
-                Value = value
-            };
-
-            var putRequest = await kv.Put(pair);
-
-
-            try
-            {
-                // Put a key that begins with a '/'
-                var invalidKey = new KVPair("/test")
-                {
-                    Flags = 42,
-                    Value = value
-                };
-                await kv.Put(invalidKey);
-               
-            }
-            catch (InvalidKeyPairException ex)
-            {
-               
-            }
-
-            getRequest = await kv.Get(key);
-           
-            var res = getRequest.Response;
-
-            
-          
-
-            var del = await kv.Delete(key);
-          
-
-            getRequest = await kv.Get(key);
-           
-        }
     }
 }

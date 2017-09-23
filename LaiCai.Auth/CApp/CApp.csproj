@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsulRegister.cs" />
+    <Compile Include="HttpRequestHelper.cs" />
     <Compile Include="MqProgram.cs" />
     <Compile Include="P1.cs" />
     <Compile Include="Program.cs" />
