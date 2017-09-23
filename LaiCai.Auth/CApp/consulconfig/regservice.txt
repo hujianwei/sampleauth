@@ -1,0 +1,15 @@
+{
+  "ID": "redis1",
+  "Name": "redis_1212",
+  "Tags": [
+    "primary",
+    "v1"
+  ],
+  "Address": "192.168.1.55",
+  "Port": 7001,
+  "EnableTagOverride": false,
+  "Check": {
+            "tcp": "192.168.1.55:7001",  
+            "interval": "5s"  
+  }
+}

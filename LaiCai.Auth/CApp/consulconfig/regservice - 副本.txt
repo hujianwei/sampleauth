@@ -1,0 +1,17 @@
+{
+  "ID": "redis1",
+  "Name": "redis_1212",
+  "Tags": [
+    "primary",
+    "v1"
+  ],
+  "Address": "127.0.0.1",
+  "Port": 8000,
+  "EnableTagOverride": false,
+  "Check": {
+    "HTTP": "http://localhost:5000/health",
+     "TCP":"192.168.1.55:7001"
+    "Interval": "10s",
+    "TTL": "15s"
+  }
+}

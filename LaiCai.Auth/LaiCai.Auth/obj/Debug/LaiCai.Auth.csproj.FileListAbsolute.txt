@@ -279,3 +279,4 @@ D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\bin\WebActivatorEx.dll
 D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\bin\System.Web.Http.Cors.xml
 D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\bin\Swashbuckle.Core.dll
 D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\bin\LaiCai.Auth.xml
+D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\obj\Debug\LaiCai.Auth.csprojResolveAssemblyReference.cache

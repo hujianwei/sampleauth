@@ -3,3 +3,7 @@ D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\bin\Debug\netcoreapp1.0\AspNetCore
 D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\bin\Debug\netcoreapp1.0\AspNetCore.WebApp.runtimeconfig.dev.json
 D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\obj\Debug\netcoreapp1.0\AspNetCore.WebApp.csprojResolveAssemblyReference.cache
 D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\obj\Debug\netcoreapp1.0\AspNetCore.WebApp.AssemblyInfo.cs
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\bin\Debug\netcoreapp1.0\AspNetCore.WebApp.dll
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\bin\Debug\netcoreapp1.0\AspNetCore.WebApp.pdb
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\obj\Debug\netcoreapp1.0\AspNetCore.WebApp.dll
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\obj\Debug\netcoreapp1.0\AspNetCore.WebApp.pdb

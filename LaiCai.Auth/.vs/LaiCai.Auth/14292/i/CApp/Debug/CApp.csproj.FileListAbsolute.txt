@@ -1,0 +1,10 @@
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\b\CApp\bin\Debug\xunit.abstractions.dll
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\b\CApp\bin\Debug\xunit.runner.visualstudio.testadapter.dll
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\b\CApp\bin\Debug\xunit.runner.utility.net35.dll
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\b\CApp\bin\Debug\xunit.runner.reporters.net452.dll
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\b\CApp\bin\Debug\CApp.exe.config
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\b\CApp\bin\Debug\CApp.exe
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\b\CApp\bin\Debug\CApp.pdb
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\i\CApp\Debug\CApp.csprojResolveAssemblyReference.cache
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\i\CApp\Debug\CApp.exe
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\i\CApp\Debug\CApp.pdb

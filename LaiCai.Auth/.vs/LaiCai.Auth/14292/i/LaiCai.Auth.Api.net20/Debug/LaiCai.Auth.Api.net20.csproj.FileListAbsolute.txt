@@ -1,0 +1,6 @@
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\b\LaiCai.Auth.Api2.0\bin\LaiCai.Auth.Api.net20.dll.config
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\b\LaiCai.Auth.Api2.0\bin\LaiCai.Auth.Api.net20.dll
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\b\LaiCai.Auth.Api2.0\bin\LaiCai.Auth.Api.net20.pdb
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\i\LaiCai.Auth.Api.net20\Debug\LaiCai.Auth.Api.net20.csprojResolveAssemblyReference.cache
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\i\LaiCai.Auth.Api.net20\Debug\LaiCai.Auth.Api.net20.dll
+D:\gitcode\auth\LaiCai.Auth\.vs\LaiCai.Auth\14292\i\LaiCai.Auth.Api.net20\Debug\LaiCai.Auth.Api.net20.pdb
