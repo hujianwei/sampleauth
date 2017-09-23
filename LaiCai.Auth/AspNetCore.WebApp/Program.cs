@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+
 
 namespace AspNetCore.WebApp
 {
@@ -15,18 +17,17 @@ namespace AspNetCore.WebApp
         {
             var config = new ConfigurationBuilder()
                  .SetBasePath(Directory.GetCurrentDirectory())
-                 .AddJsonFile("hosting.json", optional: false)
+                 .AddJsonFile("hosting.json", optional: true)
                  .Build();
 
             var host = new WebHostBuilder()
                 .UseKestrel()
-                .UseUrls("http://localhost:60000", "http://localhost:60001")
-                //.UseConfiguration(config)
+                //.UseUrls("http://*:60000", "http://*:60001")
+                .UseConfiguration(config)
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
-                .Build();
-
+                .Build(); 
             host.Run();
         }
     }

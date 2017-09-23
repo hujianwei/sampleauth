@@ -34,7 +34,7 @@ namespace AspNetCore.WebApp
         {
             // Add framework services.
             services.AddMvc();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(null);
 
             // using the new overload which adds a singleton of the configuration to services and the configure method to add logging
             // TODO: still not 100% happy with the logging part
@@ -55,7 +55,7 @@ namespace AspNetCore.WebApp
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
+           
             app.UseMvc();
         }
     }
