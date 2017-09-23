@@ -18,6 +18,16 @@ D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\CacheManager.SystemRuntimeCaching.xml
 D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\Microsoft.Diagnostics.Tracing.EventSource.xml
 D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\RabbitMQ.Client.xml
 D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\StackExchange.Redis.StrongName.xml
-D:\gitcode\auth\LaiCai.Auth\CApp\obj\Debug\CApp.csprojResolveAssemblyReference.cache
 D:\gitcode\auth\LaiCai.Auth\CApp\obj\Debug\CApp.exe
 D:\gitcode\auth\LaiCai.Auth\CApp\obj\Debug\CApp.pdb
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\Consul.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\xunit.abstractions.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\xunit.assert.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\xunit.core.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\xunit.execution.desktop.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\xunit.assert.xml
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\xunit.core.xml
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\xunit.execution.desktop.xml
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\xunit.runner.visualstudio.testadapter.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\xunit.runner.utility.net35.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\xunit.runner.reporters.net452.dll

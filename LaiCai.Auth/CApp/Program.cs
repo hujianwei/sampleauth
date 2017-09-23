@@ -15,7 +15,7 @@ namespace CApp
     class Program
     {
         private static string logDir = AppDomain.CurrentDomain.BaseDirectory + "log";
-        static void Main(string[] args)
+        static void Main1(string[] args)
         {
 
             if (!Directory.Exists(logDir))
