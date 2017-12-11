@@ -3,7 +3,7 @@
 <autofac defaultAssembly="LaiCai.Auth">
   <!--通用接口-->
   <components name="0">
-    <type>LaiCai.Auth.Implement.CacheManager, LaiCai.Auth</type>
+    <type>LaiCai.Auth.Implement.RedisCache, LaiCai.Auth</type>
     <services name="0" type="LaiCai.Auth.IServices.ICache" />
     <injectProperties>true</injectProperties>
     <instanceScope>per-request</instanceScope>

@@ -31,4 +31,5 @@ D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\xunit.execution.desktop.xml
 D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\xunit.runner.visualstudio.testadapter.dll
 D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\xunit.runner.utility.net35.dll
 D:\gitcode\auth\LaiCai.Auth\CApp\bin\Debug\xunit.runner.reporters.net452.dll
+D:\gitcode\auth\LaiCai.Auth\CApp\obj\Debug\CApp.csproj.CoreCompileInputs.cache
 D:\gitcode\auth\LaiCai.Auth\CApp\obj\Debug\CApp.csprojResolveAssemblyReference.cache

@@ -23,6 +23,7 @@ namespace LaiCai.Auth.Controllers
 
         public async Task<ActionResult> Index()
         {
+            /*
             //用户登陆获取令牌
             Dictionary<string, string> loginDict = new Dictionary<string, string>();
             loginDict.Add("client_id", "acai.com");
@@ -46,8 +47,8 @@ namespace LaiCai.Auth.Controllers
             //headerDict.Add("client_secret", "4fc8710733229acab11cc1d4efb3f0");
             //var result = await _helper.HttpToServer("http://auth.api.com/api/user/1007", "", RequestMethod.GET, ContentType.JSON, "6e3374846bcf65a6cdcb1f49f82cd51", headerDict, "utf-8");
 
-            Response.Write(result.Item2);
-  
+            Response.Write(result.Item2);            
+            */
 
             return View();
         }

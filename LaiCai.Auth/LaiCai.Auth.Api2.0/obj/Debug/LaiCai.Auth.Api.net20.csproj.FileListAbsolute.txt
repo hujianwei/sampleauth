@@ -13,3 +13,4 @@ D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth.Api2.0\bin\Newtonsoft.Json.xml
 D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth.Api2.0\obj\Debug\LaiCai.Auth.Api.net20.csprojResolveAssemblyReference.cache
 D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth.Api2.0\obj\Debug\LaiCai.Auth.Api.net20.dll
 D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth.Api2.0\obj\Debug\LaiCai.Auth.Api.net20.pdb
+D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth.Api2.0\obj\Debug\LaiCai.Auth.Api.net20.csproj.CoreCompileInputs.cache

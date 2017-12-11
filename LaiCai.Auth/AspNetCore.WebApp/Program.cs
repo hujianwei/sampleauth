@@ -17,12 +17,12 @@ namespace AspNetCore.WebApp
         {
             var config = new ConfigurationBuilder()
                  .SetBasePath(Directory.GetCurrentDirectory())
-                 .AddJsonFile("hosting.json", optional: true)
+                 //.AddJsonFile("hosting.json", optional: true)
                  .Build();
 
             var host = new WebHostBuilder()
                 .UseKestrel()
-                //.UseUrls("http://*:60000", "http://*:60001")
+                .UseUrls("http://*:60000", "http://*:60001")
                 .UseConfiguration(config)
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()

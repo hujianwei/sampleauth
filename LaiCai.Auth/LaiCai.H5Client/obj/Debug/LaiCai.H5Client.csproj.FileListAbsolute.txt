@@ -164,3 +164,4 @@ D:\gitcode\auth\LaiCai.Auth\LaiCai.H5Client\bin\zh-Hans\System.Web.WebPages.Razo
 D:\gitcode\auth\LaiCai.Auth\LaiCai.H5Client\obj\Debug\LaiCai.H5Client.csprojResolveAssemblyReference.cache
 D:\gitcode\auth\LaiCai.Auth\LaiCai.H5Client\obj\Debug\LaiCai.H5Client.dll
 D:\gitcode\auth\LaiCai.Auth\LaiCai.H5Client\obj\Debug\LaiCai.H5Client.pdb
+D:\gitcode\auth\LaiCai.Auth\LaiCai.H5Client\obj\Debug\LaiCai.H5Client.csproj.CoreCompileInputs.cache

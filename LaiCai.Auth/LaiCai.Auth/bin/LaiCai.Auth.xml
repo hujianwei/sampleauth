@@ -194,6 +194,21 @@
             <param name="dict"></param>
             <returns></returns>
         </member>
+        <member name="M:LaiCai.Auth.Controllers.WxController.GetUnixTime">
+            <summary>  
+            获取时间戳  13位
+            </summary>  
+            <returns></returns>  
+        </member>
+        <member name="M:LaiCai.Auth.Controllers.WxController.GetRegexValue(System.String,System.String,System.String)">
+            <summary>
+            获取正则表达式内容
+            </summary>
+            <param name="inputStr"></param>
+            <param name="groupName"></param>
+            <param name="pattern"></param>
+            <returns></returns>
+        </member>
         <member name="M:LaiCai.Auth.Implement.ClientRepertory.AddClient(LaiCai.Auth.Models.ClientItem)">
             <summary>
             增加应用

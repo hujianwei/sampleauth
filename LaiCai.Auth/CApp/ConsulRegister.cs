@@ -16,7 +16,7 @@ namespace CApp
     {
         private static string rootUri = "http://192.168.1.55:8500/v1/";
         private static string rootDir = @"D:\gitcode\auth\LaiCai.Auth\CApp\";
-        static  void Main(string[] args)
+        static  void Main1(string[] args)
         {
             RegisterService();
             //DeregisterService("redis1");
