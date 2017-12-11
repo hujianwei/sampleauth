@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="/scripts/jquery-3.2.1.min.js"></script>
+<table>
+    <tr>
+        <td><img src="@ViewBag.QrUrl" style="width:200px;height:200px" /></td>
+    </tr>
+</table>
+
+<script>
+    window.setTimeout("scan()", 15 * 1000);
+    function scan() {
+        $.ajax({
+            url: "/wx/scan?uuid=@ViewBag.UUID",
+            type: "GET",
+            success: function (data) {
+                alert(JSON.stringify(data));
+                if (data.code == 1) {
+                    alert(data.msg);
+                }
+            }
+        });
+        
+    }
+</script>
+

@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Valid values are 'single-instance', 'per-dependency' (the default), 'per-lifetime-scope', and 'per-request'.-->
+<autofac defaultAssembly="LaiCai.Auth">
+  <!--通用接口-->
+  <components name="0">
+    <type>LaiCai.Auth.Implement.CacheManager, LaiCai.Auth</type>
+    <services name="0" type="LaiCai.Auth.IServices.ICache" />
+    <injectProperties>true</injectProperties>
+    <instanceScope>per-request</instanceScope>
+  </components>
+  <components name="1">
+    <type>LaiCai.Auth.Implement.HttpRequestHelper, LaiCai.Auth</type>
+    <services name="1" type="LaiCai.Auth.IServices.IRequestHelper" />
+    <injectProperties>true</injectProperties>
+    <instanceScope>single-instance</instanceScope>
+  </components>
+  <components name="3">
+    <type>LaiCai.Auth.Implement.Log4net, LaiCai.Auth</type>
+    <services name="3" type="LaiCai.Auth.IServices.ILog" />
+    <injectProperties>true</injectProperties>
+    <instanceScope>single-instance</instanceScope>
+  </components>
+
+  <components name="6">
+    <type>LaiCai.Auth.Implement.BaseOperater, LaiCai.Auth</type>
+    <services name="6" type="LaiCai.Auth.Implement.BaseOperater" />
+    <injectProperties>true</injectProperties>
+    <instanceScope>single-instance</instanceScope>
+  </components>
+
+  <!--具体业务相关接口-->
+  <components name="4">
+    <type>LaiCai.Auth.Implement.ClientRepertory, LaiCai.Auth</type>
+    <services name="4" type="LaiCai.Auth.IServices.IClient" />
+    <injectProperties>true</injectProperties>
+    <instanceScope>per-dependency</instanceScope>
+  </components>
+
+  <components name="5">
+    <type>LaiCai.Auth.Implement.UserRepertory, LaiCai.Auth</type>
+    <services name="5" type="LaiCai.Auth.IServices.IUser" />
+    <injectProperties>true</injectProperties>
+    <instanceScope>per-dependency</instanceScope>
+  </components>
+  
+  <components name="7">
+    <type>LaiCai.Auth.Implement.TokenRepertory, LaiCai.Auth</type>
+    <services name="7" type="LaiCai.Auth.IServices.IToken" />
+    <injectProperties>true</injectProperties>
+    <instanceScope>per-dependency</instanceScope>
+  </components>
+
+
+
+
+</autofac>

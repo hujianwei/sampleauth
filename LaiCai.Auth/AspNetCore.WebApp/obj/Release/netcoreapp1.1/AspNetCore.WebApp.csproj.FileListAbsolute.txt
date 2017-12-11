@@ -1,0 +1,11 @@
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\bin\Release\netcoreapp1.1\AspNetCore.WebApp.deps.json
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\bin\Release\netcoreapp1.1\AspNetCore.WebApp.runtimeconfig.json
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\bin\Release\netcoreapp1.1\AspNetCore.WebApp.runtimeconfig.dev.json
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\bin\Release\netcoreapp1.1\AspNetCore.WebApp.dll
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\bin\Release\netcoreapp1.1\AspNetCore.WebApp.pdb
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\obj\Release\netcoreapp1.1\AspNetCore.WebApp.csprojResolveAssemblyReference.cache
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\obj\Release\netcoreapp1.1\AspNetCore.WebApp.Properties.Resources.resources
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\obj\Release\netcoreapp1.1\AspNetCore.WebApp.csproj.GenerateResource.Cache
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\obj\Release\netcoreapp1.1\AspNetCore.WebApp.AssemblyInfo.cs
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\obj\Release\netcoreapp1.1\AspNetCore.WebApp.dll
+D:\gitcode\auth\LaiCai.Auth\AspNetCore.WebApp\obj\Release\netcoreapp1.1\AspNetCore.WebApp.pdb
