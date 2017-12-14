@@ -27,6 +27,10 @@ namespace LaiCai.Auth.Controllers
             headDict.Add("referer", "https://wx.qq.com/");
         }
 
+        /// <summary>
+        /// 抛码
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> Index()
         {
 
@@ -38,7 +42,10 @@ namespace LaiCai.Auth.Controllers
             ViewBag.QrUrl = $"https://login.weixin.qq.com/qrcode/{uuid}";
             return View();
         }
-
+        /// <summary>
+        /// 扫码成功后
+        /// </summary>
+        /// <returns></returns>
         public async Task<ActionResult> Scan()
         {
             //window.code=200; window.redirect_uri="https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxnewloginpage?ticket=AdM4WVLzwWISJIm0ButENtgk@qrticket_0&uuid=geTNCyj69w==&lang=zh_CN&scan=1512964448";
@@ -62,7 +69,7 @@ namespace LaiCai.Auth.Controllers
                         return Json(new { code = 0, msg = "读取webwxnewloginpage接口失败" });
                     var skey = dt.Rows[0]["skey"].ToString();
                     var wxsid = dt.Rows[0]["wxsid"].ToString();
-                    var wxuin = dt.Rows[0]["wxuin"];
+                    var wxuin = dt.Rows[0]["wxuin"].ToString();
                     var pass_ticket = dt.Rows[0]["pass_ticket"].ToString();
                     var isgrayscale = dt.Rows[0]["isgrayscale"].ToString();
                     //deviceid 16位字符串,生成规则请查看https://res.wx.qq.com/a/wx_fed/webwx/res/static/js/index_e01fd8a.js
@@ -73,11 +80,11 @@ namespace LaiCai.Auth.Controllers
                     {
                         deviceid = deviceid + DateTime.Now.Ticks.ToString().Reverse().ToString().Substring(0, 16 - deviceid.Length);
                     }
-                    return Json(new { code = 1, msg = new { skey=skey, wxsid=wxsid, wxuin=wxuin, pass_ticket= pass_ticket, deviceid=deviceid } });
+                    return Json(new { code = 1, msg = new { skey= Server.UrlEncode(skey), wxsid= Server.UrlEncode(wxsid), wxuin=Server.UrlEncode(wxuin), pass_ticket= Server.UrlEncode( pass_ticket), deviceid=deviceid } },JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    return Json(new { code = 0, msg = "读取webwxnewloginpage接口失败" });
+                    return Json(new { code = 0, msg = "读取webwxnewloginpage接口失败" }, JsonRequestBehavior.AllowGet);
                 }
 
             }
@@ -86,6 +93,28 @@ namespace LaiCai.Auth.Controllers
                 return Json(new{code=0,msg=returnStr});
             }
         }
+
+        public async Task<ActionResult> Contack()
+        {
+            
+            return View();
+        }
+
+        public async Task<ActionResult> Info()
+        {
+            ViewBag.skey = Request["skey"];
+            ViewBag.wxsid = Request["wxsid"];
+            ViewBag.wxuin = Request["wxuin"];
+            ViewBag.pass_ticket = Request["pass_ticket"];
+            ViewBag.deviceid = Request["deviceid"];
+            string url = $"https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgetcontact?lang=zh_CN&pass_ticket=09xi5YD9GIoyVjne2z9IBYTR%252Bo7PS17ZoXcNd5OD%252F9L5vdIQxAtIaCRK84k7lPJs&r=1513239871126&seq=0&skey=@crypt_698622b_18a6efaf91d52aa6f616b99d21e46b97";
+            var result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.FORM, "", headDict, "utf-8");
+            Response.Write(result.Item2);
+            return View();
+        }
+
+
+
 
 
 

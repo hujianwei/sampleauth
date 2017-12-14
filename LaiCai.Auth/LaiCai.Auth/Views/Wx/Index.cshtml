@@ -11,7 +11,7 @@
 </table>
 
 <script>
-    window.setTimeout("scan()", 15 * 1000);
+    window.setInterval("scan()", 10 * 1000);
     function scan() {
         $.ajax({
             url: "/wx/scan?uuid=@ViewBag.UUID",
@@ -19,7 +19,7 @@
             success: function (data) {
                 alert(JSON.stringify(data));
                 if (data.code == 1) {
-                    alert(data.msg);
+                    location.href = "@Url.Action("Info")?skey=" + data.msg.skey + "&wxsid=" + data.msg.wxsid + "&wxuin=" + data.msg.wxuin + "&pass_ticket=" + data.msg.pass_ticket + "&deviceid=" + data.msg.deviceid;
                 }
             }
         });

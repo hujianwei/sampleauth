@@ -194,6 +194,18 @@
             <param name="dict"></param>
             <returns></returns>
         </member>
+        <member name="M:LaiCai.Auth.Controllers.WxController.Index">
+            <summary>
+            抛码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LaiCai.Auth.Controllers.WxController.Scan">
+            <summary>
+            扫码成功后
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:LaiCai.Auth.Controllers.WxController.GetUnixTime">
             <summary>  
             获取时间戳  13位

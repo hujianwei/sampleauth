@@ -1,0 +1,5 @@
+log/*
+storage/*
+!storage/upload/*
+*.pyc
+*.swp

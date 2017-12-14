@@ -23,6 +23,17 @@ namespace LaiCai.Auth.Controllers
 
         public async Task<ActionResult> Index()
         {
+
+            var obj = new
+            {
+                key = "6d6252d078894e8e9ba1a7f8eb0fbc53",
+                info = "你说什么",
+                userid = "1025455"
+            };
+            var objStr = JsonConvert.SerializeObject(obj);
+            var result = await _helper.HttpToServer("http://www.tuling123.com/openapi/api", objStr, RequestMethod.POST, ContentType.JSON, "", null, "utf-8");
+            Response.Write(result.Item2);
+
             /*
             //用户登陆获取令牌
             Dictionary<string, string> loginDict = new Dictionary<string, string>();

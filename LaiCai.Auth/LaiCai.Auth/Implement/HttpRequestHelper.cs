@@ -87,6 +87,7 @@ namespace LaiCai.Auth.Implement
                     request.GetRequestStream().Write(btBodys, 0, btBodys.Length);
                 }
                 response = (HttpWebResponse)request.GetResponse();
+               
                 reader = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(encoding));
                 StringBuilder sb = new StringBuilder();
                 char[] bufChar = new char[4096];
