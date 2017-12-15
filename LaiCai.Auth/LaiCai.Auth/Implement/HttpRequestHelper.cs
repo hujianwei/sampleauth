@@ -33,9 +33,28 @@ namespace LaiCai.Auth.Implement
         /// <param name="headerDict"></param>
         /// <param name="encoding"></param>
         /// <returns>
-        /// 返回Tuple<string,HttpStatusCode>数据,T1:string服务端返回的结果,T2:HttpStatusCode 返回的状态码
+        /// 返回Tuple<int, string,string>数据,T1:状态码,T2:string服务端返回的结果
         /// </returns>
-        public Task<Tuple<int, string>> HttpToServer(string url, string sendContent, RequestMethod method, ContentType contentType, string token, IDictionary<string, string> headerDict, string encoding, int timeout = 10)
+        public async Task<Tuple<int, string>> HttpToServer(string url, string sendContent, RequestMethod method, ContentType contentType, string token, IDictionary<string, string> headerDict, string encoding, int timeout = 10)
+        {
+            var result = await HttpToServer(url, sendContent, method, contentType, token, headerDict, encoding, timeout, false);
+            return Tuple.Create<int, string>(result.Item1, result.Item2);
+        }
+
+        /// <summary>
+        /// 向服务器提交数据并返回对应的结果
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="sendContent"></param>
+        /// <param name="method"></param>
+        /// <param name="contentType"></param>
+        /// <param name="token"></param>
+        /// <param name="headerDict"></param>
+        /// <param name="encoding"></param>
+        /// <returns>
+        /// 返回Tuple<int, string,string>数据,T1:状态码,T2:string服务端返回的结果,T3:服务器响应的cookie
+        /// </returns>
+        public Task<Tuple<int, string,string>> HttpToServer(string url, string sendContent, RequestMethod method, ContentType contentType, string token, IDictionary<string, string> headerDict, string encoding, int timeout = 10, bool responseCookie = true)
         {
 
             System.Net.ServicePointManager.DefaultConnectionLimit = 512;
@@ -96,11 +115,14 @@ namespace LaiCai.Auth.Implement
                 {
                     sb.Append(new String(bufChar, 0, count));
                 }
-                return Task.FromResult(Tuple.Create<int, string>(200, sb.ToString()));
+                var cookie = "";
+                if (responseCookie)
+                    cookie = response.Headers.Get("Set-Cookie");
+                return Task.FromResult(Tuple.Create<int, string,string>(200, sb.ToString(), cookie));
             }
             catch (WebException e)
             {
-                return Task.FromResult(Tuple.Create<int, string>(500, e.Message));
+                return Task.FromResult(Tuple.Create<int, string,string>(500, e.Message,""));
             }
             finally
             {

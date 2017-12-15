@@ -249,6 +249,7 @@
             <returns></returns>
         </member>
         <!-- Badly formed XML comment ignored for member "M:LaiCai.Auth.Implement.HttpRequestHelper.HttpToServer(System.String,System.String,LaiCai.Auth.IServices.RequestMethod,LaiCai.Auth.IServices.ContentType,System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.String,System.Int32)" -->
+        <!-- Badly formed XML comment ignored for member "M:LaiCai.Auth.Implement.HttpRequestHelper.HttpToServer(System.String,System.String,LaiCai.Auth.IServices.RequestMethod,LaiCai.Auth.IServices.ContentType,System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.String,System.Int32,System.Boolean)" -->
         <member name="T:LaiCai.Auth.Implement.RedisCache">
             <summary>
             Redis实现
@@ -524,6 +525,7 @@
             <param name="obj"></param>
         </member>
         <!-- Badly formed XML comment ignored for member "M:LaiCai.Auth.IServices.IRequestHelper.HttpToServer(System.String,System.String,LaiCai.Auth.IServices.RequestMethod,LaiCai.Auth.IServices.ContentType,System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.String,System.Int32)" -->
+        <!-- Badly formed XML comment ignored for member "M:LaiCai.Auth.IServices.IRequestHelper.HttpToServer(System.String,System.String,LaiCai.Auth.IServices.RequestMethod,LaiCai.Auth.IServices.ContentType,System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.String,System.Int32,System.Boolean)" -->
         <member name="T:LaiCai.Auth.IServices.RequestMethod">
             <summary>
             向http发送的方法

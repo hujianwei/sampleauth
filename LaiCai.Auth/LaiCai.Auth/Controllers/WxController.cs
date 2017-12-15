@@ -51,13 +51,14 @@ namespace LaiCai.Auth.Controllers
             //window.code=200; window.redirect_uri="https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxnewloginpage?ticket=AdM4WVLzwWISJIm0ButENtgk@qrticket_0&uuid=geTNCyj69w==&lang=zh_CN&scan=1512964448";
             string uuid = Request["uuid"];
             string url = $"https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login?tip=1&uuid={uuid}&_={GetUnixTime()}";
-            var result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.FORM, "", headDict, "utf-8");
+            var result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.FORM, "", headDict, "utf-8",10,true);
+            System.IO.File.AppendAllText(@"D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\temp\login.txt",result.Item3);
             var returnStr = result.Item2;
             if (returnStr.IndexOf("window.code=200") != -1)
             {
                 var returnUri = this.GetRegexValue(returnStr, "return", "window.redirect_uri=\"(?<return>[^\"]+)\"");
                 url = returnUri + "&fun=new";
-                result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.FORM, "", headDict, "utf-8");
+                result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.FORM, "", headDict, "utf-8",10,true);
                 if (result.Item1 == 200)
                 {
                     DataSet ds = new DataSet();
@@ -80,6 +81,8 @@ namespace LaiCai.Auth.Controllers
                     {
                         deviceid = deviceid + DateTime.Now.Ticks.ToString().Reverse().ToString().Substring(0, 16 - deviceid.Length);
                     }
+                    System.IO.File.AppendAllText(@"D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\temp\webwxnewloginpage.txt", result.Item3);
+
                     return Json(new { code = 1, msg = new { skey= Server.UrlEncode(skey), wxsid= Server.UrlEncode(wxsid), wxuin=Server.UrlEncode(wxuin), pass_ticket= Server.UrlEncode( pass_ticket), deviceid=deviceid } },JsonRequestBehavior.AllowGet);
                 }
                 else
@@ -102,14 +105,23 @@ namespace LaiCai.Auth.Controllers
 
         public async Task<ActionResult> Info()
         {
-            ViewBag.skey = Request["skey"];
-            ViewBag.wxsid = Request["wxsid"];
-            ViewBag.wxuin = Request["wxuin"];
-            ViewBag.pass_ticket = Request["pass_ticket"];
-            ViewBag.deviceid = Request["deviceid"];
-            string url = $"https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgetcontact?lang=zh_CN&pass_ticket=09xi5YD9GIoyVjne2z9IBYTR%252Bo7PS17ZoXcNd5OD%252F9L5vdIQxAtIaCRK84k7lPJs&r=1513239871126&seq=0&skey=@crypt_698622b_18a6efaf91d52aa6f616b99d21e46b97";
-            var result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.FORM, "", headDict, "utf-8");
-            Response.Write(result.Item2);
+            string skey = Server.UrlDecode(Request["skey"]);
+            string wxsid = Server.UrlDecode(Request["wxsid"]);
+            string wxuin = Server.UrlDecode(Request["wxuin"]);
+            string pass_ticket = Server.UrlDecode(Request["pass_ticket"]);
+            string deviceid = Request["deviceid"];
+            ViewBag.skey = skey;
+            ViewBag.wxsid = wxsid;
+            ViewBag.wxuin = wxuin;
+            ViewBag.pass_ticket = pass_ticket;
+            ViewBag.deviceid = deviceid;
+            //webwxinit发送的cookie信息
+            //mm_lang=zh_CN; MM_WX_NOTIFY_STATE=1; MM_WX_SOUND_STATE=1; refreshTimes=2; wxuin=2864823900; wxsid=uadHbbSWUxNdYnR4; wxloadtime=1513328849; webwx_data_ticket=gSeJTbuiBJuQpkN1EDVbhiBp; webwxuvid=ae2cf6518f801a36bb78a09f0ff3182303919381fde2b068838e2b20f747455b772262627df23877821fb9e0861a2a23; webwx_auth_ticket=CIsBEMX235IOGoABaH1cSXX1mwSFKVZfC3bgf0jlQSumigjTNnxdTcIs5fxYTGEJYQJDtOOhKjod1i/v8vINsaOdL2yElgsRrrfJvySUkGNsxfVTCTSF/1UCBVD3gMtGPx7zoYTF4wCHspj5SMGxpKBIhB3l5O8CSa7FRn9BnjM2If4oi4iiG+10CFk=; login_frequency=1; last_wxuin=2864823900
+            string url = $"https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxinit?r={Request["r"]}&lang=zh_CN&pass_ticket={Server.UrlEncode(pass_ticket)}";
+            var sendObj = new { BaseRequest =new { DeviceID= deviceid, Sid= wxsid, Skey= skey, Uin= wxuin } };
+            var sendObjStr = JsonConvert.SerializeObject(sendObj);
+            var result = await _helper.HttpToServer(url, sendObjStr, RequestMethod.POST, ContentType.JSON, "", headDict, "utf-8",10,true);
+             
             return View();
         }
 

@@ -12,14 +12,15 @@
 
 <script>
     window.setInterval("scan()", 10 * 1000);
+    var r = ~new Date;
     function scan() {
         $.ajax({
             url: "/wx/scan?uuid=@ViewBag.UUID",
             type: "GET",
             success: function (data) {
-                alert(JSON.stringify(data));
+               // alert(JSON.stringify(data));
                 if (data.code == 1) {
-                    location.href = "@Url.Action("Info")?skey=" + data.msg.skey + "&wxsid=" + data.msg.wxsid + "&wxuin=" + data.msg.wxuin + "&pass_ticket=" + data.msg.pass_ticket + "&deviceid=" + data.msg.deviceid;
+                    location.href = "@Url.Action("Info")?skey=" + data.msg.skey + "&wxsid=" + data.msg.wxsid + "&wxuin=" + data.msg.wxuin + "&pass_ticket=" + data.msg.pass_ticket + "&deviceid=" + data.msg.deviceid + "&r=" + r;
                 }
             }
         });
