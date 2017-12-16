@@ -212,6 +212,13 @@
             </summary>  
             <returns></returns>  
         </member>
+        <member name="M:LaiCai.Auth.Controllers.WxController.GetUnixTime(System.Int32)">
+            <summary>
+            获取unix时间截
+            </summary>
+            <param name="length"></param>
+            <returns></returns>
+        </member>
         <member name="M:LaiCai.Auth.Controllers.WxController.GetRegexValue(System.String,System.String,System.String)">
             <summary>
             获取正则表达式内容
@@ -219,6 +226,13 @@
             <param name="inputStr"></param>
             <param name="groupName"></param>
             <param name="pattern"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LaiCai.Auth.Controllers.WxController.ResCookieDictionary(System.String)">
+            <summary>
+            根据wxuin返回响应的cookie信息
+            </summary>
+            <param name="wxuin"></param>
             <returns></returns>
         </member>
         <member name="M:LaiCai.Auth.Implement.ClientRepertory.AddClient(LaiCai.Auth.Models.ClientItem)">

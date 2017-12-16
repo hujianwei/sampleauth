@@ -20,11 +20,14 @@ namespace LaiCai.Auth.Controllers
         private IDictionary<string, string> headDict = new Dictionary<string, string>();
         private IRequestHelper _helper = null;
 
+        private string wxDirectory = @"D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\temp\";
+
         public WxController(IRequestHelper helper)
         {
             _helper = helper;
             
             headDict.Add("referer", "https://wx.qq.com/");
+            headDict.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0");
         }
 
         /// <summary>
@@ -33,6 +36,7 @@ namespace LaiCai.Auth.Controllers
         /// <returns></returns>
         public async Task<ActionResult> Index()
         {
+
 
             string redirect_uri = "https%3A%2F%2Fwx.qq.com%2Fcgi-bin%2Fmmwebwx-bin%2Fwebwxnewloginpage";
             string url = $"https://login.wx.qq.com/jslogin?appid={appId}&redirect_uri={redirect_uri}&fun=new&lang=zh_CN&_={GetUnixTime()}";
@@ -52,7 +56,7 @@ namespace LaiCai.Auth.Controllers
             string uuid = Request["uuid"];
             string url = $"https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login?tip=1&uuid={uuid}&_={GetUnixTime()}";
             var result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.FORM, "", headDict, "utf-8",10,true);
-            System.IO.File.AppendAllText(@"D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\temp\login.txt",result.Item3);
+           // System.IO.File.AppendAllText(@"D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\temp\login.txt",result.Item3);
             var returnStr = result.Item2;
             if (returnStr.IndexOf("window.code=200") != -1)
             {
@@ -81,7 +85,8 @@ namespace LaiCai.Auth.Controllers
                     {
                         deviceid = deviceid + DateTime.Now.Ticks.ToString().Reverse().ToString().Substring(0, 16 - deviceid.Length);
                     }
-                    System.IO.File.AppendAllText(@"D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\temp\webwxnewloginpage.txt", result.Item3);
+                    //将响应的头信息的cookie写入文件
+                    System.IO.File.WriteAllText($"{wxDirectory}webwxnewloginpage_{wxuin}.txt", result.Item3);
 
                     return Json(new { code = 1, msg = new { skey= Server.UrlEncode(skey), wxsid= Server.UrlEncode(wxsid), wxuin=Server.UrlEncode(wxuin), pass_ticket= Server.UrlEncode( pass_ticket), deviceid=deviceid } },JsonRequestBehavior.AllowGet);
                 }
@@ -117,11 +122,77 @@ namespace LaiCai.Auth.Controllers
             ViewBag.deviceid = deviceid;
             //webwxinit发送的cookie信息
             //mm_lang=zh_CN; MM_WX_NOTIFY_STATE=1; MM_WX_SOUND_STATE=1; refreshTimes=2; wxuin=2864823900; wxsid=uadHbbSWUxNdYnR4; wxloadtime=1513328849; webwx_data_ticket=gSeJTbuiBJuQpkN1EDVbhiBp; webwxuvid=ae2cf6518f801a36bb78a09f0ff3182303919381fde2b068838e2b20f747455b772262627df23877821fb9e0861a2a23; webwx_auth_ticket=CIsBEMX235IOGoABaH1cSXX1mwSFKVZfC3bgf0jlQSumigjTNnxdTcIs5fxYTGEJYQJDtOOhKjod1i/v8vINsaOdL2yElgsRrrfJvySUkGNsxfVTCTSF/1UCBVD3gMtGPx7zoYTF4wCHspj5SMGxpKBIhB3l5O8CSa7FRn9BnjM2If4oi4iiG+10CFk=; login_frequency=1; last_wxuin=2864823900
+            var cookieDict = this.ResCookieDictionary(wxuin);
+            var reqCookieStr = "";
+            foreach(var keyvalue in cookieDict)
+            {
+                reqCookieStr += $"{keyvalue.Key}={keyvalue.Value};";
+            }
+            reqCookieStr = reqCookieStr.Substring(0, reqCookieStr.Length - 1);
+            headDict.Add("Cookie", reqCookieStr);
+
+            //微信初始化
             string url = $"https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxinit?r={Request["r"]}&lang=zh_CN&pass_ticket={Server.UrlEncode(pass_ticket)}";
             var sendObj = new { BaseRequest =new { DeviceID= deviceid, Sid= wxsid, Skey= skey, Uin= wxuin } };
             var sendObjStr = JsonConvert.SerializeObject(sendObj);
             var result = await _helper.HttpToServer(url, sendObjStr, RequestMethod.POST, ContentType.JSON, "", headDict, "utf-8",10,true);
-             
+            //初始化信息写入文件
+            System.IO.File.WriteAllText($"{wxDirectory}webwxinit_{wxuin}.txt", result.Item2);
+
+            //获取联系人列表
+            url = $"https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgetcontact?pass_ticket={Server.UrlEncode(pass_ticket)}&r={GetUnixTime()}&seq=0&skey={skey}";
+
+            result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.JSON, "", headDict, "utf-8", 10, true);
+            //联系人信息写入文件
+            System.IO.File.WriteAllText($"{wxDirectory}webwxgetcontact{wxuin}.txt", result.Item2);
+
+            //发送信息
+            var clientId = GetUnixTime().ToString() + "0" + (100 + new Random().Next(0, 899)).ToString();
+            url = $"https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxsendmsg?pass_ticket={Server.UrlEncode(pass_ticket)}";
+            var sendMsg = new
+                            {
+                                BaseRequest = new
+                                {
+                                    DeviceID = deviceid,
+                                    Sid = wxsid,
+                                    Skey = skey,
+                                    Uin = wxuin
+                                },
+                                Scene = 0,
+                                Msg = new
+                                {
+                                    Type = 1,
+                                    Content = "hello",
+                                    FromUserName = "@f052fcb699587fe047bfdc9a83de562a",
+                                    ToUserName = "@9bcbb744fbe30a11898cbb6b64114cda1179ef02f9866e54dad298f592a2852a",
+                                    LocalID = clientId,
+                                    ClientMsgId = clientId
+                                }
+                            };
+            var sendMsgStr = JsonConvert.SerializeObject(sendMsg);
+            reqCookieStr = "";
+            foreach (var keyvalue in cookieDict)
+            {
+                if (keyvalue.Key == "wxloadtime")
+                {
+                    reqCookieStr += $"{keyvalue.Key}={GetUnixTime(10) + 2}_expired;";
+                }
+                else
+                {
+                    reqCookieStr += $"{keyvalue.Key}={keyvalue.Value};";
+                }
+            }
+            reqCookieStr = reqCookieStr.Substring(0, reqCookieStr.Length - 1);
+            if (headDict.ContainsKey("Cookie"))
+            {
+                headDict["Cookie"] = reqCookieStr;
+            }
+            else
+            {
+                headDict.Add("Cookie", reqCookieStr);
+            }
+            result = await _helper.HttpToServer(url, sendMsgStr, RequestMethod.POST, ContentType.JSON, "", headDict, "utf-8", 10, true);
+
             return View();
         }
 
@@ -137,8 +208,27 @@ namespace LaiCai.Auth.Controllers
         /// <returns></returns>  
         private long GetUnixTime()
         {
-            TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            return Convert.ToInt64(ts.TotalSeconds * 1000);
+            return GetUnixTime(13);
+        }
+
+        /// <summary>
+        /// 获取unix时间截
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        private long GetUnixTime(int length)
+        {
+            if (length == 13)
+            {
+                TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                return Convert.ToInt64(ts.TotalSeconds * 1000);
+            }
+            else if(length==10)
+            {
+                TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                return Convert.ToInt64(ts.TotalSeconds );
+            }
+            return 0;
         }
 
         /// <summary>
@@ -158,5 +248,33 @@ namespace LaiCai.Auth.Controllers
             else
                 return match.Groups[groupName].Value;
         }
+
+        /// <summary>
+        /// 根据wxuin返回响应的cookie信息
+        /// </summary>
+        /// <param name="wxuin"></param>
+        /// <returns></returns>
+        private IDictionary<string,string> ResCookieDictionary( string wxuin )
+        {
+            var result = new Dictionary<string, string>();
+            result.Add("mm_lang", "zh_CN");
+            result.Add("MM_WX_NOTIFY_STATE", "1");
+            result.Add("MM_WX_SOUND_STATE", "1");
+            string filePath = $"{wxDirectory}webwxnewloginpage_{wxuin}.txt";
+            var content = System.IO.File.ReadAllText(filePath);
+            if (string.IsNullOrEmpty(content))
+            {
+                return result;
+            }
+            result.Add("wxuin", this.GetRegexValue(content, "wxuin", "wxuin=(?<wxuin>[^;]+);"));
+            result.Add("wxsid", this.GetRegexValue(content, "wxsid", "wxsid=(?<wxsid>[^;]+);"));
+            result.Add("wxloadtime", this.GetRegexValue(content, "wxloadtime", "wxloadtime=(?<wxloadtime>[^;]+);"));
+            result.Add("webwx_data_ticket", this.GetRegexValue(content, "webwx_data_ticket", "webwx_data_ticket=(?<webwx_data_ticket>[^;]+);"));
+            result.Add("webwxuvid", this.GetRegexValue(content, "webwxuvid", "webwxuvid=(?<webwxuvid>[^;]+);"));
+            result.Add("webwx_auth_ticket", this.GetRegexValue(content, "webwx_auth_ticket", "webwx_auth_ticket=(?<webwx_auth_ticket>[^;]+);"));
+            return result;
+        }
+
+        
     }
 }
