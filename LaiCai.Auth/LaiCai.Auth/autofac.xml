@@ -8,6 +8,13 @@
     <injectProperties>true</injectProperties>
     <instanceScope>per-request</instanceScope>
   </components>
+    <components name="RedisCli">
+    <type>LaiCai.Auth.Implement.RedisCli, LaiCai.Auth</type>
+    <services name="RedisCli" type="LaiCai.Auth.Implement.RedisCli" />
+    <injectProperties>true</injectProperties>
+    <instanceScope>per-request</instanceScope>
+  </components>
+    
   <components name="1">
     <type>LaiCai.Auth.Implement.HttpRequestHelper, LaiCai.Auth</type>
     <services name="1" type="LaiCai.Auth.IServices.IRequestHelper" />

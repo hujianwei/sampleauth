@@ -10,22 +10,25 @@ using System.Text.RegularExpressions;
 using LaiCai.Auth.IServices;
 using LaiCai.Auth.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
 namespace LaiCai.Auth.Controllers
 {
+   
     public class WxController : Controller
     {
+        private LaiCai.Auth.Implement.RedisCli _redis = null;
         private string appId = "wx782c26e4c19acffb";
         private IDictionary<string, string> headDict = new Dictionary<string, string>();
         private IRequestHelper _helper = null;
 
         private string wxDirectory = @"D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\temp\";
 
-        public WxController(IRequestHelper helper)
+        public WxController(IRequestHelper helper, Implement.RedisCli redis)
         {
             _helper = helper;
-            
+            _redis = redis;
             headDict.Add("referer", "https://wx.qq.com/");
             headDict.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0");
         }
@@ -196,9 +199,105 @@ namespace LaiCai.Auth.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 测试
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ActionResult> Test()
+        {
+            string context = System.IO.File.ReadAllText(Server.MapPath("/temp/webwxinit_2864823900.txt"));
+            var initInfo = GetSyncKeyList(context);
+            _redis.Set("adfsad", initInfo);
+            //var list = ContactList(System.IO.File.ReadAllText(Server.MapPath("/temp/webwxgetcontact2864823900.txt")));
+            //Response.Write( JsonConvert.SerializeObject(initInfo) );
+            Response.Write(JsonConvert.SerializeObject(initInfo));
+            return View();
+        }
 
+        /// <summary>
+        /// 获取微信初始化对象
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        private WxUserInitInfo GetInitInfo(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+                return null;
+            var jsonObj = JsonConvert.DeserializeObject<JObject>(content);
+            if (jsonObj == null || jsonObj["User"] == null)
+                return null;
+            try
+            {
+                return JsonConvert.DeserializeObject<WxUserInitInfo>(jsonObj["User"].ToString());
+            }
+            catch
+            {
+                return null;
+            }
 
+        }
 
+        /// <summary>
+        /// 获取微信SyncKey列表
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        private IList<WxSyncKey> GetSyncKeyList(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+                return null;
+            var jsonObj = JsonConvert.DeserializeObject<JObject>(content);
+            if (jsonObj == null || jsonObj["SyncKey"] == null)
+                return null;
+            try
+            {
+                var syncObj = (JObject)jsonObj["SyncKey"];
+                return JsonConvert.DeserializeObject<IList<WxSyncKey>>(syncObj["List"].ToString());
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+
+        /// <summary>
+        /// 获取微信联系人列表
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        private IList<WxContactInfo> ContactList(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+                return null;
+            var jsonObj = JsonConvert.DeserializeObject<JObject>(content);
+            if (jsonObj == null )
+                return null;
+            try
+            {
+                IList<WxContactInfo> list = new List<WxContactInfo>();
+                var jsonList = jsonObj["MemberList"] as JArray;
+                if (jsonList == null || jsonList.Count <= 0)
+                    return null;
+                foreach(var item in jsonList)
+                {
+                    try
+                    {
+                        var str = item.ToString();
+;                        list.Add( JsonConvert.DeserializeObject<WxContactInfo>(str) );
+                    }
+                    catch(Exception e)
+                    {
+
+                    }
+                }
+                return list;
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
 
 
@@ -276,5 +375,96 @@ namespace LaiCai.Auth.Controllers
         }
 
         
+    }
+
+    /*
+     微信登陆信息
+     "User": {
+"Uin": 2864823900,
+"UserName": "@f052fcb699587fe047bfdc9a83de562a",
+"NickName": "胡建威",
+"HeadImgUrl": "/cgi-bin/mmwebwx-bin/webwxgeticon?seq=1265359010&username=@f052fcb699587fe047bfdc9a83de562a&skey=@crypt_698622b_618bd542c7347492def9869140ed6db9",
+"RemarkName": "",
+"PYInitial": "",
+"PYQuanPin": "",
+"RemarkPYInitial": "",
+"RemarkPYQuanPin": "",
+"HideInputBarFlag": 0,
+"StarFriend": 0,
+"Sex": 1,
+"Signature": "梦想从未实现",
+"AppAccountFlag": 0,
+"VerifyFlag": 0,
+"ContactFlag": 0,
+"WebWxPluginSwitch": 0,
+"HeadImgFlag": 1,
+"SnsFlag": 17
+}
+     * */
+    public class WxUserInitInfo
+    {
+        /// <summary>
+        /// 微信编号，不变
+        /// </summary>
+        public string Uin { set; get; }
+        /// <summary>
+        /// 用户名，每次登陆会变化
+        /// </summary>
+        public string UserName { set; get; }
+        /// <summary>
+        /// 昵称
+        /// </summary>
+        public string NickName { set; get; }
+        /// <summary>
+        /// 头像地址
+        /// </summary>
+        public string HeadImgUrl { set; get; }
+        /// <summary>
+        /// 备注名称
+        /// </summary>
+        public string RemarkName { set; get; }
+        /// <summary>
+        /// 签名
+        /// </summary>
+        public string Signature { set; get; }
+        /// <summary>
+        /// 性别,0:未知，公众号未知，1：男，2：女
+        /// </summary>
+        public int Sex { set; get; }
+    }
+
+    /// <summary>
+    /// 微信联系人信息
+    /// </summary>
+    public class WxContactInfo: WxUserInitInfo
+    {
+        /// <summary>
+        /// 会员数,>0微信群
+        /// </summary>
+        public int MemberCount { set; get; }
+        /// <summary>
+        /// 省份
+        /// </summary>
+        public string Province { set; get; }
+
+        /// <summary>
+        /// 城市 
+        /// </summary>
+        public string City { set; get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int AttrStatus { set; get; }
+
+    }
+
+    /// <summary>
+    /// 微信sysncKey信息
+    /// </summary>
+    public class WxSyncKey
+    {
+        public int Key { set; get; }
+        public int Val { set; get; }
     }
 }

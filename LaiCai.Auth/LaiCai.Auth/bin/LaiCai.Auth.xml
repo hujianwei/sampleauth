@@ -206,6 +206,33 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:LaiCai.Auth.Controllers.WxController.Test">
+            <summary>
+            测试
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LaiCai.Auth.Controllers.WxController.GetInitInfo(System.String)">
+            <summary>
+            获取微信初始化对象
+            </summary>
+            <param name="content"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LaiCai.Auth.Controllers.WxController.GetSyncKeyList(System.String)">
+            <summary>
+            获取微信SyncKey列表
+            </summary>
+            <param name="content"></param>
+            <returns></returns>
+        </member>
+        <member name="M:LaiCai.Auth.Controllers.WxController.ContactList(System.String)">
+            <summary>
+            获取微信联系人列表
+            </summary>
+            <param name="content"></param>
+            <returns></returns>
+        </member>
         <member name="M:LaiCai.Auth.Controllers.WxController.GetUnixTime">
             <summary>  
             获取时间戳  13位
@@ -234,6 +261,71 @@
             </summary>
             <param name="wxuin"></param>
             <returns></returns>
+        </member>
+        <member name="P:LaiCai.Auth.Controllers.WxUserInitInfo.Uin">
+            <summary>
+            微信编号，不变
+            </summary>
+        </member>
+        <member name="P:LaiCai.Auth.Controllers.WxUserInitInfo.UserName">
+            <summary>
+            用户名，每次登陆会变化
+            </summary>
+        </member>
+        <member name="P:LaiCai.Auth.Controllers.WxUserInitInfo.NickName">
+            <summary>
+            昵称
+            </summary>
+        </member>
+        <member name="P:LaiCai.Auth.Controllers.WxUserInitInfo.HeadImgUrl">
+            <summary>
+            头像地址
+            </summary>
+        </member>
+        <member name="P:LaiCai.Auth.Controllers.WxUserInitInfo.RemarkName">
+            <summary>
+            备注名称
+            </summary>
+        </member>
+        <member name="P:LaiCai.Auth.Controllers.WxUserInitInfo.Signature">
+            <summary>
+            签名
+            </summary>
+        </member>
+        <member name="P:LaiCai.Auth.Controllers.WxUserInitInfo.Sex">
+            <summary>
+            性别,0:未知，公众号未知，1：男，2：女
+            </summary>
+        </member>
+        <member name="T:LaiCai.Auth.Controllers.WxContactInfo">
+            <summary>
+            微信联系人信息
+            </summary>
+        </member>
+        <member name="P:LaiCai.Auth.Controllers.WxContactInfo.MemberCount">
+            <summary>
+            会员数,>0微信群
+            </summary>
+        </member>
+        <member name="P:LaiCai.Auth.Controllers.WxContactInfo.Province">
+            <summary>
+            省份
+            </summary>
+        </member>
+        <member name="P:LaiCai.Auth.Controllers.WxContactInfo.City">
+            <summary>
+            城市 
+            </summary>
+        </member>
+        <member name="P:LaiCai.Auth.Controllers.WxContactInfo.AttrStatus">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:LaiCai.Auth.Controllers.WxSyncKey">
+            <summary>
+            微信sysncKey信息
+            </summary>
         </member>
         <member name="M:LaiCai.Auth.Implement.ClientRepertory.AddClient(LaiCai.Auth.Models.ClientItem)">
             <summary>

@@ -303,6 +303,7 @@
     <Compile Include="Implement\HttpRequestHelper.cs" />
     <Compile Include="Implement\RedisCache.cs" />
     <Compile Include="Implement\Log4net.cs" />
+    <Compile Include="Implement\RedisCli.cs" />
     <Compile Include="Implement\TokenRepertory.cs" />
     <Compile Include="Implement\UserRepertory.cs" />
     <Compile Include="IServices\ICache.cs" />
@@ -356,6 +357,7 @@
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Views\Wx\Index.cshtml" />
     <Content Include="Views\Wx\Info.cshtml" />
+    <Content Include="Views\Wx\Test.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
