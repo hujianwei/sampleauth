@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace LaiCai.Auth.Controllers
 {
-   
+
     public class WxController : Controller
     {
         private LaiCai.Auth.Implement.RedisCli _redis = null;
@@ -23,13 +23,13 @@ namespace LaiCai.Auth.Controllers
         private IDictionary<string, string> headDict = new Dictionary<string, string>();
         private IRequestHelper _helper = null;
 
-        private string wxDirectory = @"D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\temp\";
+        private string wxDirectory = @"G:\GitCode\sampleauth\sampleauth\LaiCai.Auth\LaiCai.Auth\temp\";
 
         public WxController(IRequestHelper helper, Implement.RedisCli redis)
         {
             _helper = helper;
             _redis = redis;
-            headDict.Add("referer", "https://wx.qq.com/");
+            headDict.Add("referer", "https://wx2.qq.com/");
             headDict.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0");
         }
 
@@ -55,17 +55,17 @@ namespace LaiCai.Auth.Controllers
         /// <returns></returns>
         public async Task<ActionResult> Scan()
         {
-            //window.code=200; window.redirect_uri="https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxnewloginpage?ticket=AdM4WVLzwWISJIm0ButENtgk@qrticket_0&uuid=geTNCyj69w==&lang=zh_CN&scan=1512964448";
+            //window.code=200; window.redirect_uri="https://wx2.qq.com/cgi-bin/mmwebwx-bin/webwxnewloginpage?ticket=AdM4WVLzwWISJIm0ButENtgk@qrticket_0&uuid=geTNCyj69w==&lang=zh_CN&scan=1512964448";
             string uuid = Request["uuid"];
             string url = $"https://login.weixin.qq.com/cgi-bin/mmwebwx-bin/login?tip=1&uuid={uuid}&_={GetUnixTime()}";
-            var result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.FORM, "", headDict, "utf-8",10,true);
-           // System.IO.File.AppendAllText(@"D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\temp\login.txt",result.Item3);
+            var result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.FORM, "", headDict, "utf-8", 10, true);
+            // System.IO.File.AppendAllText(@"D:\gitcode\auth\LaiCai.Auth\LaiCai.Auth\temp\login.txt",result.Item3);
             var returnStr = result.Item2;
             if (returnStr.IndexOf("window.code=200") != -1)
             {
                 var returnUri = this.GetRegexValue(returnStr, "return", "window.redirect_uri=\"(?<return>[^\"]+)\"");
                 url = returnUri + "&fun=new";
-                result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.FORM, "", headDict, "utf-8",10,true);
+                result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.FORM, "", headDict, "utf-8", 10, true);
                 if (result.Item1 == 200)
                 {
                     DataSet ds = new DataSet();
@@ -73,7 +73,7 @@ namespace LaiCai.Auth.Controllers
                     var reader = new XmlTextReader(stream);
                     ds.ReadXml(reader);
                     var dt = ds.Tables[0];
-                    if(dt.Rows[0]["ret"].ToString()!="0")
+                    if (dt.Rows[0]["ret"].ToString() != "0")
                         return Json(new { code = 0, msg = "读取webwxnewloginpage接口失败" });
                     var skey = dt.Rows[0]["skey"].ToString();
                     var wxsid = dt.Rows[0]["wxsid"].ToString();
@@ -91,7 +91,42 @@ namespace LaiCai.Auth.Controllers
                     //将响应的头信息的cookie写入文件
                     System.IO.File.WriteAllText($"{wxDirectory}webwxnewloginpage_{wxuin}.txt", result.Item3);
 
-                    return Json(new { code = 1, msg = new { skey= Server.UrlEncode(skey), wxsid= Server.UrlEncode(wxsid), wxuin=Server.UrlEncode(wxuin), pass_ticket= Server.UrlEncode( pass_ticket), deviceid=deviceid } },JsonRequestBehavior.AllowGet);
+
+                    var cookieDict = this.ResCookieDictionary(wxuin);
+                    var reqCookieStr = "";
+                    foreach (var keyvalue in cookieDict)
+                    {
+                        reqCookieStr += $"{keyvalue.Key}={keyvalue.Value};";
+                    }
+                    reqCookieStr = reqCookieStr.Substring(0, reqCookieStr.Length - 1);
+                    headDict.Add("Cookie", reqCookieStr);
+
+                    //微信初始化
+                    url = $"{BaseUrl(wxuin)}/cgi-bin/mmwebwx-bin/webwxinit?r={Request["r"]}&lang=zh_CN&pass_ticket={Server.UrlEncode(pass_ticket)}";
+                    var sendObj = new { BaseRequest = new { DeviceID = deviceid, Sid = wxsid, Skey = skey, Uin = wxuin } };
+                    var sendObjStr = JsonConvert.SerializeObject(sendObj);
+                    var initResult = await _helper.HttpToServer(url, sendObjStr, RequestMethod.POST, ContentType.JSON, "", headDict, "utf-8", 10, true);
+                    //初始化信息写入文件
+                    System.IO.File.WriteAllText($"{wxDirectory}webwxinit_{wxuin}.txt", initResult.Item2);
+                    _redis.Set<WxUserInitInfo>($"initUser_{wxuin}", this.GetInitInfo(initResult.Item2));
+                    _redis.Set<string>($"cookie_{wxuin}", reqCookieStr);
+                    var syncList = this.GetSyncKeyList(initResult.Item2);
+                    if(syncList!=null&&syncList.Count>0)
+                    {
+                        var baseRequest = new{
+                                                DeviceID = deviceid,
+                                                Sid = wxsid,
+                                                Skey = skey,
+                                                Uin = Convert.ToInt64(wxuin)
+                                            };
+                        _redis.Set($"sync_{wxuin}", syncList);
+                        _redis.Set($"baserequest_{wxuin}", baseRequest);
+                        return Json(new { code = 1, msg = new { skey = Server.UrlEncode(skey), wxsid = Server.UrlEncode(wxsid), wxuin = Server.UrlEncode(wxuin), pass_ticket = Server.UrlEncode(pass_ticket), deviceid = deviceid } }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        return Json(new { code = 0, msg = "读取webwxnewloginpage接口失败" }, JsonRequestBehavior.AllowGet);
+                    }                   
                 }
                 else
                 {
@@ -101,13 +136,13 @@ namespace LaiCai.Auth.Controllers
             }
             else
             {
-                return Json(new{code=0,msg=returnStr});
+                return Json(new { code = 0, msg = returnStr },JsonRequestBehavior.AllowGet);
             }
         }
 
         public async Task<ActionResult> Contack()
         {
-            
+
             return View();
         }
 
@@ -127,7 +162,7 @@ namespace LaiCai.Auth.Controllers
             //mm_lang=zh_CN; MM_WX_NOTIFY_STATE=1; MM_WX_SOUND_STATE=1; refreshTimes=2; wxuin=2864823900; wxsid=uadHbbSWUxNdYnR4; wxloadtime=1513328849; webwx_data_ticket=gSeJTbuiBJuQpkN1EDVbhiBp; webwxuvid=ae2cf6518f801a36bb78a09f0ff3182303919381fde2b068838e2b20f747455b772262627df23877821fb9e0861a2a23; webwx_auth_ticket=CIsBEMX235IOGoABaH1cSXX1mwSFKVZfC3bgf0jlQSumigjTNnxdTcIs5fxYTGEJYQJDtOOhKjod1i/v8vINsaOdL2yElgsRrrfJvySUkGNsxfVTCTSF/1UCBVD3gMtGPx7zoYTF4wCHspj5SMGxpKBIhB3l5O8CSa7FRn9BnjM2If4oi4iiG+10CFk=; login_frequency=1; last_wxuin=2864823900
             var cookieDict = this.ResCookieDictionary(wxuin);
             var reqCookieStr = "";
-            foreach(var keyvalue in cookieDict)
+            foreach (var keyvalue in cookieDict)
             {
                 reqCookieStr += $"{keyvalue.Key}={keyvalue.Value};";
             }
@@ -135,45 +170,96 @@ namespace LaiCai.Auth.Controllers
             headDict.Add("Cookie", reqCookieStr);
 
             //微信初始化
-            string url = $"https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxinit?r={Request["r"]}&lang=zh_CN&pass_ticket={Server.UrlEncode(pass_ticket)}";
-            var sendObj = new { BaseRequest =new { DeviceID= deviceid, Sid= wxsid, Skey= skey, Uin= wxuin } };
-            var sendObjStr = JsonConvert.SerializeObject(sendObj);
-            var result = await _helper.HttpToServer(url, sendObjStr, RequestMethod.POST, ContentType.JSON, "", headDict, "utf-8",10,true);
-            //初始化信息写入文件
-            System.IO.File.WriteAllText($"{wxDirectory}webwxinit_{wxuin}.txt", result.Item2);
+            //string url = $"{BaseUrl(wxuin)}/cgi-bin/mmwebwx-bin/webwxinit?r={Request["r"]}&lang=zh_CN&pass_ticket={Server.UrlEncode(pass_ticket)}";
+            //var sendObj = new { BaseRequest = new { DeviceID = deviceid, Sid = wxsid, Skey = skey, Uin = wxuin } };
+            //var sendObjStr = JsonConvert.SerializeObject(sendObj);
+            //var result = await _helper.HttpToServer(url, sendObjStr, RequestMethod.POST, ContentType.JSON, "", headDict, "utf-8", 10, true);
+            ////初始化信息写入文件
+            //System.IO.File.WriteAllText($"{wxDirectory}webwxinit_{wxuin}.txt", result.Item2);
 
             //获取联系人列表
-            url = $"https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgetcontact?pass_ticket={Server.UrlEncode(pass_ticket)}&r={GetUnixTime()}&seq=0&skey={skey}";
+            string url = $"{BaseUrl(wxuin)}/cgi-bin/mmwebwx-bin/webwxgetcontact?pass_ticket={Server.UrlEncode(pass_ticket)}&r={GetUnixTime()}&seq=0&skey={skey}";
 
-            result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.JSON, "", headDict, "utf-8", 10, true);
+            var result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.JSON, "", headDict, "utf-8", 30, true);
+            if (result.Item1 != 200)
+            {
+                url = $"{BaseUrl(wxuin)}/cgi-bin/mmwebwx-bin/webwxgetcontact?lang=zh_CN&r={GetUnixTime()}&seq=66139&skey={skey}";
+                result = await _helper.HttpToServer(url, "", RequestMethod.GET, ContentType.JSON, "", headDict, "utf-8", 30, true);
+            }
             //联系人信息写入文件
             System.IO.File.WriteAllText($"{wxDirectory}webwxgetcontact{wxuin}.txt", result.Item2);
-
-            //发送信息
-            var clientId = GetUnixTime().ToString() + "0" + (100 + new Random().Next(0, 899)).ToString();
-            url = $"https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxsendmsg?pass_ticket={Server.UrlEncode(pass_ticket)}";
-            var sendMsg = new
+            /*            //发送信息
+                        var clientId = GetUnixTime().ToString() + "0" + (100 + new Random().Next(0, 899)).ToString();
+                        url = $"{BaseUrl(wxuin)}/cgi-bin/mmwebwx-bin/webwxsendmsg?pass_ticket={Server.UrlEncode(pass_ticket)}";
+                        var sendMsg = new
+                        {
+                            BaseRequest = new
                             {
-                                BaseRequest = new
+                                DeviceID = deviceid,
+                                Sid = wxsid,
+                                Skey = skey,
+                                Uin = wxuin
+                            },
+                            Scene = 0,
+                            Msg = new
+                            {
+                                Type = 1,
+                                Content = "hello",
+                                FromUserName = "@f052fcb699587fe047bfdc9a83de562a",
+                                ToUserName = "@9bcbb744fbe30a11898cbb6b64114cda1179ef02f9866e54dad298f592a2852a",
+                                LocalID = clientId,
+                                ClientMsgId = clientId
+                            }
+                        };
+                        var sendMsgStr = JsonConvert.SerializeObject(sendMsg);
+                        reqCookieStr = "";
+                        foreach (var keyvalue in cookieDict)
+                        {
+                            if (keyvalue.Key == "wxloadtime")
+                            {
+                                reqCookieStr += $"{keyvalue.Key}={GetUnixTime(10) + 2}_expired;";
+                            }
+                            else
+                            {
+                                reqCookieStr += $"{keyvalue.Key}={keyvalue.Value};";
+                            }
+                        }
+                        reqCookieStr = reqCookieStr.Substring(0, reqCookieStr.Length - 1);
+                        if (headDict.ContainsKey("Cookie"))
+                        {
+                            headDict["Cookie"] = reqCookieStr;
+                        }
+                        else
+                        {
+                            headDict.Add("Cookie", reqCookieStr);
+                        }
+                        result = await _helper.HttpToServer(url, sendMsgStr, RequestMethod.POST, ContentType.JSON, "", headDict, "utf-8", 10, true);
+                        */
+            return View();
+        }
+
+
+        public async Task<ActionResult> SendSyncKey()
+        {
+            string wxsid = Server.UrlDecode(Request["wxsid"]);
+            string skey = Server.UrlDecode(Request["skey"]);
+            string wxuin = Request["wxuin"];
+            string rr = Request["rr"];
+            var url = $"{BaseUrl(wxuin)}/cgi-bin/mmwebwx-bin/webwxsync?sid={wxsid}&skey={skey}";
+            var syncList = _redis.Get<IList<WxSyncKey>>($"sync_{wxuin}");
+            var sendMsgObj = new{
+                                BaseRequest = BaseRequest(wxuin),
+                                SyncKey = new
                                 {
-                                    DeviceID = deviceid,
-                                    Sid = wxsid,
-                                    Skey = skey,
-                                    Uin = wxuin
+                                    Count = syncList.Count,
+                                    List = syncList
                                 },
-                                Scene = 0,
-                                Msg = new
-                                {
-                                    Type = 1,
-                                    Content = "hello",
-                                    FromUserName = "@f052fcb699587fe047bfdc9a83de562a",
-                                    ToUserName = "@9bcbb744fbe30a11898cbb6b64114cda1179ef02f9866e54dad298f592a2852a",
-                                    LocalID = clientId,
-                                    ClientMsgId = clientId
-                                }
+                                rr = rr
                             };
-            var sendMsgStr = JsonConvert.SerializeObject(sendMsg);
-            reqCookieStr = "";
+            var sendMsg = JsonConvert.SerializeObject(sendMsgObj);
+
+            var cookieDict = this.ResCookieDictionary(wxuin);
+            var reqCookieStr = "";
             foreach (var keyvalue in cookieDict)
             {
                 if (keyvalue.Key == "wxloadtime")
@@ -194,9 +280,19 @@ namespace LaiCai.Auth.Controllers
             {
                 headDict.Add("Cookie", reqCookieStr);
             }
-            result = await _helper.HttpToServer(url, sendMsgStr, RequestMethod.POST, ContentType.JSON, "", headDict, "utf-8", 10, true);
 
-            return View();
+            var result = await _helper.HttpToServer(url, sendMsg, RequestMethod.POST, ContentType.JSON, "", headDict, "utf-8", 10, true);
+            //System.IO.File.WriteAllText($"{wxDirectory}webwxsync_{wxuin}.txt", result.Item2);
+            if (result.Item1 == 200)
+            {
+                var list = this.GetSyncKeyList(result.Item2);
+                if (list != null && list.Count > 0)
+                {
+                    _redis.Set($"sync_{wxuin}", list);
+                }
+            }
+
+            return Json(result.Item2, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -205,13 +301,60 @@ namespace LaiCai.Auth.Controllers
         /// <returns></returns>
         public async Task<ActionResult> Test()
         {
-            string context = System.IO.File.ReadAllText(Server.MapPath("/temp/webwxinit_2864823900.txt"));
-            var initInfo = GetSyncKeyList(context);
-            _redis.Set("adfsad", initInfo);
+            string wxuin = Request["wxuid"];
+            string context = System.IO.File.ReadAllText(Server.MapPath("/temp/文字图片.txt"));
+            var result = this.GetMsgList(wxuin, context);
             //var list = ContactList(System.IO.File.ReadAllText(Server.MapPath("/temp/webwxgetcontact2864823900.txt")));
             //Response.Write( JsonConvert.SerializeObject(initInfo) );
-            Response.Write(JsonConvert.SerializeObject(initInfo));
+            if(result!=null)
+            {
+                foreach(var item in result)
+                {
+                    _redis.LPUSH("msgList", JsonConvert.SerializeObject(item));
+                }
+            }
+            Response.Write(JsonConvert.SerializeObject(result));
             return View();
+        }
+        /// <summary>
+        /// 请求地址
+        /// </summary>
+        /// <param name="wxuin"></param>
+        /// <returns></returns>
+        public string BaseUrl(object wxuin)
+        {
+            string str = wxuin.ToString();
+            string returnUrl = "";
+            switch (str)
+            {
+                case "547689722":
+                    returnUrl = "https://wx2.qq.com";
+                    break;
+                case "2864823900":
+                    returnUrl = "https://wx.qq.com";
+                    break;
+                default:
+                    returnUrl = "https://wx.qq.com";
+                    break;
+            }
+            return returnUrl;
+        }
+
+        /// <summary>
+        /// 获取基本请求信息
+        /// </summary>
+        /// <param name="wxuin"></param>
+        /// <returns></returns>
+        private object BaseRequest(string wxuin)
+        {
+            var result = _redis.Get<IDictionary<string, object>>($"baserequest_{wxuin}");
+            return new
+            {
+                DeviceID = result["DeviceID"],
+                Sid = result["Sid"],
+                Skey = result["Skey"],
+                Uin = Convert.ToInt64(result["Uin"])
+            };
         }
 
         /// <summary>
@@ -271,7 +414,7 @@ namespace LaiCai.Auth.Controllers
             if (string.IsNullOrEmpty(content))
                 return null;
             var jsonObj = JsonConvert.DeserializeObject<JObject>(content);
-            if (jsonObj == null )
+            if (jsonObj == null)
                 return null;
             try
             {
@@ -279,14 +422,14 @@ namespace LaiCai.Auth.Controllers
                 var jsonList = jsonObj["MemberList"] as JArray;
                 if (jsonList == null || jsonList.Count <= 0)
                     return null;
-                foreach(var item in jsonList)
+                foreach (var item in jsonList)
                 {
                     try
                     {
                         var str = item.ToString();
-;                        list.Add( JsonConvert.DeserializeObject<WxContactInfo>(str) );
+                        ; list.Add(JsonConvert.DeserializeObject<WxContactInfo>(str));
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
 
                     }
@@ -297,6 +440,34 @@ namespace LaiCai.Auth.Controllers
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 读取微信消息
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public IList<WxMsg> GetMsgList( string wxuid, string content)
+        {
+            if (string.IsNullOrEmpty(content))
+                return null;
+            JObject rootJson = JsonConvert.DeserializeObject<JObject>(content);
+            if (Convert.ToInt32(rootJson["AddMsgCount"]) <= 0)
+                return null;
+            var list = JsonConvert.DeserializeObject<IList<WxMsg>>(rootJson["AddMsgList"].ToString());
+            if (list == null || list.Count <= 0)
+                return null;
+            var resultList = new List<WxMsg>();
+            foreach(var item in list)
+            {
+                if (item.FromUserName.Equals(wxuid))
+                    continue;
+                else if (item.FromUserName.IndexOf("@@") == 0)
+                    continue;
+                else
+                    resultList.Add(item);
+            }
+            return resultList;
         }
 
 
@@ -322,10 +493,10 @@ namespace LaiCai.Auth.Controllers
                 TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
                 return Convert.ToInt64(ts.TotalSeconds * 1000);
             }
-            else if(length==10)
+            else if (length == 10)
             {
                 TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                return Convert.ToInt64(ts.TotalSeconds );
+                return Convert.ToInt64(ts.TotalSeconds);
             }
             return 0;
         }
@@ -337,7 +508,7 @@ namespace LaiCai.Auth.Controllers
         /// <param name="groupName"></param>
         /// <param name="pattern"></param>
         /// <returns></returns>
-        private  string GetRegexValue(string inputStr, string groupName, string pattern)
+        private string GetRegexValue(string inputStr, string groupName, string pattern)
         {
             var match = new Regex(pattern).Match(inputStr);
             if (match == null)
@@ -353,7 +524,7 @@ namespace LaiCai.Auth.Controllers
         /// </summary>
         /// <param name="wxuin"></param>
         /// <returns></returns>
-        private IDictionary<string,string> ResCookieDictionary( string wxuin )
+        private IDictionary<string, string> ResCookieDictionary(string wxuin)
         {
             var result = new Dictionary<string, string>();
             result.Add("mm_lang", "zh_CN");
@@ -374,33 +545,10 @@ namespace LaiCai.Auth.Controllers
             return result;
         }
 
-        
+
     }
 
-    /*
-     微信登陆信息
-     "User": {
-"Uin": 2864823900,
-"UserName": "@f052fcb699587fe047bfdc9a83de562a",
-"NickName": "胡建威",
-"HeadImgUrl": "/cgi-bin/mmwebwx-bin/webwxgeticon?seq=1265359010&username=@f052fcb699587fe047bfdc9a83de562a&skey=@crypt_698622b_618bd542c7347492def9869140ed6db9",
-"RemarkName": "",
-"PYInitial": "",
-"PYQuanPin": "",
-"RemarkPYInitial": "",
-"RemarkPYQuanPin": "",
-"HideInputBarFlag": 0,
-"StarFriend": 0,
-"Sex": 1,
-"Signature": "梦想从未实现",
-"AppAccountFlag": 0,
-"VerifyFlag": 0,
-"ContactFlag": 0,
-"WebWxPluginSwitch": 0,
-"HeadImgFlag": 1,
-"SnsFlag": 17
-}
-     * */
+
     public class WxUserInitInfo
     {
         /// <summary>
@@ -436,7 +584,7 @@ namespace LaiCai.Auth.Controllers
     /// <summary>
     /// 微信联系人信息
     /// </summary>
-    public class WxContactInfo: WxUserInitInfo
+    public class WxContactInfo : WxUserInitInfo
     {
         /// <summary>
         /// 会员数,>0微信群
@@ -466,5 +614,60 @@ namespace LaiCai.Auth.Controllers
     {
         public int Key { set; get; }
         public int Val { set; get; }
+    }
+
+    /// <summary>
+    /// 微信消息
+    /// </summary>
+    public class WxMsg
+    {
+        /// <summary>
+        /// 消息Id
+        /// </summary>
+        public string MsgId { set; get; }
+        /// <summary>
+        /// 消息发送账户
+        /// </summary>
+        public string FromUserName { set; get; }
+        /// <summary>
+        /// 消息到达账户
+        /// </summary>
+        public string ToUserName { set; get; }
+        /// <summary>
+        /// 消息类型,1:文字,42:名片,3:图片,10000:通过好友认证
+        /// </summary>
+        public int MsgType { set; get; }
+        /// <summary>
+        /// 内容
+        /// </summary>
+        public string Content { set; get; }
+        /// <summary>
+        /// 3:正常
+        /// </summary>
+        public int Status { set; get; }
+        /// <summary>
+        /// 图片状态
+        /// </summary>
+        public int ImgStatus { set; get; }
+        /// <summary>
+        /// 创建时间，10位unix时间截
+        /// </summary>
+        public int CreateTime { set; get; }
+        /// <summary>
+        /// 声音长度
+        /// </summary>
+        public int VoiceLength { set; get; }
+        /// <summary>
+        /// 视频长度
+        /// </summary>
+        public int PlayLength { set; get; }
+        public string FileName { set; get; }
+        public string FileSize { set; get; }
+        public string MediaId { set; get; }
+        public string Url { set; get; }
+        public int ImgHeight { set; get; }
+        public int ImgWidth { set; get; }
+        public int SubMsgType { set; get; }
+        public string OriContent { set; get; }
     }
 }
